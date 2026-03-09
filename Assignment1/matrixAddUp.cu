@@ -129,7 +129,7 @@ extern int cudaMatrixAddUp (
 
 	// TODO: Allocate a matrix of double precision values of size rows*columns
 	double *matrixDouble_gpu;
-	err = cudaMalloc(&matrixDouble_gpu, sizeof(double) * (rows * columns)));
+	err = cudaMalloc(&matrixDouble_gpu, sizeof(double) * (rows * columns));
 	if (cudaSuccess != err) {	// Check for error values
 		printf("(Cuda error %s): %s\n", "Allocating matrixDouble_gpu", cudaGetErrorString(err));
 		exit(EXIT_FAILURE);
@@ -186,7 +186,7 @@ extern int cudaMatrixAddUp (
 	cudaEventRecord(transferFloatGpuStart, 0); // We use 0 here because it is the "default" stream
 
 	// TODO: Copy the single precision matrix (matrixFloat1d) into the global memory of the GPU (matrixFloat_gpu)
-	err = cudaMemcpy(matrixFloat_gpu, matrixFloat1d, sizeof(float) * (rows * columns), cudaMemcpyHostToDevice);
+	err = cudaMemcpy(matrixFloat_gpu, matrixFloat1d.data(), sizeof(float) * (rows * columns), cudaMemcpyHostToDevice);
 	if (cudaSuccess != err) {	// Check for error values
 		printf("(Cuda error %s): %s\n", "Error copying matrixFloat1d to matrixFloat_gpu", cudaGetErrorString(err));
 		exit(EXIT_FAILURE);
@@ -209,7 +209,7 @@ extern int cudaMatrixAddUp (
 	cudaEventRecord(transferDoubleGpuStart, 0); // We use 0 here because it is the "default" stream
 
 	// TODO: Copy the double precision matrix (matrixDouble1d) into the global memory of the GPU (matrixDouble_gpu)
-	err = cudaMemcpy(matrixDouble_gpu, matrixDouble1d, sizeof(double) * (rows * columns), cudaMemcpyHostToDevice);
+	err = cudaMemcpy(matrixDouble_gpu, matrixDouble1d.data(), sizeof(double) * (rows * columns), cudaMemcpyHostToDevice);
 	if (cudaSuccess != err) {	// Check for error values
 		printf("(Cuda error %s): %s\n", "Error copying matrixDouble1d to matrixDouble_gpu", cudaGetErrorString(err));
 		exit(EXIT_FAILURE);
@@ -386,7 +386,16 @@ extern int cudaMatrixAddUp (
 	// Free the memory
 	// TODO: Free matrixFloat_gpu,rowsFloat_gpu, columnsFloat_gpu, totalRowsFloat_gpu and totalColumnsFloat_gpu
 	// TODO: Free matrixDouble_gpu,rowsDouble_gpu, columnsDouble_gpu, totalRowsDouble_gpu and totalColumnsDouble_gpu
-
+	cudaFree(matrixFloat_gpu);
+	cudaFree(rowsFloat_gpu);
+	cudaFree(columnsFloat_gpu);
+	cudaFree(totalRowsFloat_gpu);
+	cudaFree(totalColumnsFloat_gpu);
+	cudaFree(matrixDouble_gpu);
+	cudaFree(rowsDouble_gpu);
+	cudaFree(columnsDouble_gpu);
+	cudaFree(totalRowsDouble_gpu);
+	cudaFree(totalColumnsDouble_gpu);
 
 
 	cudaDeviceReset();

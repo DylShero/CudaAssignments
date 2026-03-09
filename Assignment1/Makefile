@@ -15,9 +15,9 @@ RECTANGULAR_PROBLEM_SIZE_N := 50
 RECTANGULAR_PROBLEM_SIZE_M := 20000
 
 #CUDA_ARCH_FLAGS			= -gencode arch=compute_35,code=sm_35	# GTX 680 is 3.5, a Kepler
-CUDA_ARCH_FLAGS		= -gencode=arch=compute_60,code=sm_60	# GTX 1080 is 6.0, a Pascal
+#CUDA_ARCH_FLAGS		= -gencode=arch=compute_60,code=sm_60	# GTX 1080 is 6.0, a Pascal
 #CUDA_ARCH_FLAGS		= -gencode arch=compute_70,code=sm_70	# V100 is 7.0, a Volta
-#CUDA_ARCH_FLAGS		= -gencode arch=compute_75,code=sm_75	# RTX 2080 Super is 7.5, a Turing
+CUDA_ARCH_FLAGS		= -gencode arch=compute_75,code=sm_75	# RTX 2080 Super is 7.5, a Turing
 #CUDA_ARCH_FLAGS		= -gencode arch=compute_86,code=sm_86	# RTX 3090 is 8.6, a Ampere
 #CUDA_ARCH_FLAGS		= -gencode arch=compute_90,code=sm_90	# H100s and H200s are 9.0, a Hopper
 
