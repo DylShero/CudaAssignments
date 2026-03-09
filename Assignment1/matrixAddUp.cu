@@ -47,21 +47,107 @@ __global__ void reduceVectorSinglePrecision(const float* inputVector, float* fin
 
 // TODO: Write a kernel that adds together the absolute value of each element of each row of a single precision matrix into a single precision vector of size n performing the addition:
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
-__global__ void addVectorSinglePrecision()
+__global__ void addMatrixRowsSinglePrecision(const float* matrix, float* outVector, int rows, int columns) {
+    int rowIdx = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (rowIdx < rows) {
+#ifdef WITH_REGISTERS
+        float sum = 0.0f;
+        for (int colIdx = 0; colIdx < columns; colIdx++) {
+            sum += fabsf(matrix[rowIdx * columns + colIdx]); 
+        }
+        outVector[rowIdx] = sum;
+#else
+        outVector[rowIdx] = 0.0f;
+        for (int colIdx = 0; colIdx < columns; colIdx++) {
+            outVector[rowIdx] += fabsf(matrix[rowIdx * columns + colIdx]);
+        }
+#endif
+    }
+}
 // TODO: Write a kernel that adds together the absolute value of each element of each column of a single precision matrix into a single precision vector of size m performing the addition in the registers
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
+__global__ void addMatrixColsSinglePrecision(const float* matrix, float* outVector, int rows, int columns) {
+    int colIdx = blockIdx.x * blockDim.x + threadIdx.x;
 
+    if (colIdx < columns) {
+#ifdef WITH_REGISTERS
+        float sum = 0.0f;
+        for (int rowIdx = 0; rowIdx < rows; rowIdx++) {
+            sum += fabsf(matrix[rowIdx * columns + colIdx]);
+        }
+        outVector[colIdx] = sum;
+#else
+        outVector[colIdx] = 0.0f; // Initialize to prevent garbage values
+        for (int rowIdx = 0; rowIdx < rows; rowIdx++) {
+            outVector[colIdx] += fabsf(matrix[rowIdx * columns + colIdx]);
+        }
+#endif
+    }
+}
 
 
 
 // TODO: Write a kernel that reduces a double precision vector in the global memory into a double value in the global memory performing the addition:
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
+__global__ void reduceVectorDoublePrecision(const double* inputVector, double* finalValue, int size) {
+    if (threadIdx.x == 0 && blockIdx.x == 0) {
+#ifdef WITH_REGISTERS
+        double sum = 0.0;
+        for (int i = 0; i < size; i++) {
+            sum += inputVector[i];
+        }
+        finalValue[0] = sum;
+#else
+        finalValue[0] = 0.0;
+        for (int i = 0; i < size; i++) {
+            finalValue[0] += inputVector[i];
+        }
+#endif
+    }
+}
 
 // TODO: Write a kernel that adds together the absolute value of each element of each row of a double precision matrix into a double precision vector of size n performing the addition:
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
+__global__ void addMatrixRowsDoublePrecision(const double* matrix, double* outVector, int rows, int columns) {
+    int rowIdx = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (rowIdx < rows) {
+#ifdef WITH_REGISTERS
+        double sum = 0.0;
+        for (int colIdx = 0; colIdx < columns; colIdx++) {
+            sum += fabs(matrix[rowIdx * columns + colIdx]); 
+        }
+        outVector[rowIdx] = sum;
+#else
+        outVector[rowIdx] = 0.0;
+        for (int colIdx = 0; colIdx < columns; colIdx++) {
+            outVector[rowIdx] += fabs(matrix[rowIdx * columns + colIdx]);
+        }
+#endif
+    }
+}
 
 // TODO: Write a kernel that adds together the absolute value of each element of each column of a double precision matrix into a double precision vector of size m performing the addition in the registers
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
+__global__ void addMatrixColsDoublePrecision(const double* matrix, double* outVector, int rows, int columns) {
+    int colIdx = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (colIdx < columns) {
+#ifdef WITH_REGISTERS
+        double sum = 0.0;
+        for (int rowIdx = 0; rowIdx < rows; rowIdx++) {
+            sum += fabs(matrix[rowIdx * columns + colIdx]);
+        }
+        outVector[colIdx] = sum;
+#else
+        outVector[colIdx] = 0.0;
+        for (int rowIdx = 0; rowIdx < rows; rowIdx++) {
+            outVector[colIdx] += fabs(matrix[rowIdx * columns + colIdx]);
+        }
+#endif
+    }
+}
 
 
 extern int cudaMatrixAddUp (
@@ -283,7 +369,9 @@ extern int cudaMatrixAddUp (
 
 
 	// TODO: Call the kernel that adds together the absolute value of each element of each row of a single precision matrix into a single precision vector of size rows
+	addMatrixRowsSinglePrecision<<<dimGridSingleRow, dimBlockSingleRow>>>(matrixFloat_gpu, rowsFloat_gpu, rows, columns);
 	// TODO: Call the kernel that reduces the value of the vector of size rows into a single single precision value
+	reduceVectorSinglePrecision<<<1, 1>>>(rowsFloat_gpu, totalRowsFloat_gpu, rows);// 1,1 to use only one thread.
 
 
 	// Cuda Timing
@@ -309,7 +397,9 @@ extern int cudaMatrixAddUp (
 
 
 	// TODO: Call the kernel that adds together the absolute value of each element of each column of a single precision matrix into a single precision vector of size columns
+	addMatrixColsSinglePrecision<<<dimGridSingleCol, dimBlockSingleCol>>>(matrixFloat_gpu, columnsFloat_gpu, rows, columns);
 	// TODO: Call the kernel that reduces the value of the vector of size columns into a single single precision value
+	reduceVectorSinglePrecision<<<1, 1>>>(columnsFloat_gpu, totalColumnsFloat_gpu, columns);
 
 
 	// CPU timing
