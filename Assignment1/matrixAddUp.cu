@@ -228,18 +228,30 @@ extern int cudaMatrixAddUp (
 	// TODO: Compute the execution configuration (theads and blocks) :
 
 	// TODO: Number Of Threads per block for the single precision row wise operation from the variable blockSizeSinglePrecisionRow
+	dim3 dimBlockSingleRow(blockSizeSinglePrecisionRow);
 	// TODO: Number Of Threads per block for the single precision column wise operation from the variable blockSizeSinglePrecisionColumn
+	dim3 dimBlockSingleCol(blockSizeSinglePrecisionColumn);
 	// TODO: Number Of Threads per block for the double precision row wise operation from the variable blockSizeDoublePrecisionRow
+	dim3 dimBlockDoubleRow(blockSizeDoublePrecisionRow);
 	// TODO: Number Of Threads per block for the double precision column wise operation from the variable blockSizeDoublePrecisionColumn
+	dim3 dimBlockDoubleCol(blockSizeDoublePrecisionColumn);
 
 	// TODO: Number Of blocks for the single precision row wise operation from the variables blockSizeSinglePrecisionRow and rows
+	dim3 dimGridSingleRow((rows / dimBlockSingleRow.x) + (!(rows % dimBlockSingleRow.x) ? 0 : 1));
 	// TODO: Number Of blocks for the single precision column wise operation from the variables blockSizeSinglePrecisionColumn and columns
+	dim3 dimGridSingleCol((columns / dimBlockSingleCol.x) + (!(columns % dimBlockSingleCol.x) ? 0 : 1));
 	// TODO: Number Of blocks for the double precision row wise operation from the variables blockSizeSinglePrecisionRow and rows
+	dim3 dimGridDoubleRow((rows / dimBlockDoubleRow.x) + (!(rows % dimBlockDoubleRow.x) ? 0 : 1));
 	// TODO: Number Of blocks for the double precision column wise operation from the variables blockSizeSinglePrecisionColumn and columns
+	dim3 dimGridDoubleCol((columns / dimBlockDoubleCol.x) + (!(columns % dimBlockDoubleCol.x) ? 0 : 1));
 
 
 	if (verbose) {
 		// TODO: Print the number of threads per block and number of blocks for each one of the four cases
+		printf("Single Precision Row-wise: %d threads/block, %d blocks\n", dimBlockSingleRow.x, dimGridSingleRow.x);
+        printf("Single Precision Col-wise: %d threads/block, %d blocks\n", dimBlockSingleCol.x, dimGridSingleCol.x);
+        printf("Double Precision Row-wise: %d threads/block, %d blocks\n", dimBlockDoubleRow.x, dimGridDoubleRow.x);
+        printf("Double Precision Col-wise: %d threads/block, %d blocks\n", dimBlockDoubleCol.x, dimGridDoubleCol.x);
 	}
 
 	// ************************ Single precision compute ************************
