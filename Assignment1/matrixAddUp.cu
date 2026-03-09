@@ -28,10 +28,26 @@ void cudaLastErrorCheck (const char *message) {
 
 // TODO: Write a kernel that reduces a single precision vector in the global memory into a single value in the global memory performing the addition:
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
+__global__ void reduceVectorSinglePrecision(const float* inputVector, float* finalValue, int size) {
+    if (threadIdx.x == 0 && blockIdx.x == 0) {
+#ifdef WITH_REGISTERS
+        float sum = 0.0f;
+        for (int i = 0; i < size; i++) {
+            sum += inputVector[i];
+        }
+        finalValue[0] = sum;
+#else
+        finalValue[0] = 0.0f;
+        for (int i = 0; i < size; i++) {
+            finalValue[0] += inputVector[i];
+        }
+#endif
+    }
+}
 
 // TODO: Write a kernel that adds together the absolute value of each element of each row of a single precision matrix into a single precision vector of size n performing the addition:
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
-
+__global__ void addVectorSinglePrecision()
 // TODO: Write a kernel that adds together the absolute value of each element of each column of a single precision matrix into a single precision vector of size m performing the addition in the registers
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
 
