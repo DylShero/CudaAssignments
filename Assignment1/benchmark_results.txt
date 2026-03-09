@@ -1,0 +1,1320 @@
+nvcc matrixAddUpRegs.o main.o -o matrixAddUpRegs.out --use_fast_math -gencode arch=compute_75,code=sm_75	 --extra-device-vectorization -DWITH_REGISTERS -I-I. 
+nvcc matrixAddUpNoRegs.o main.o -o matrixAddUpNoRegs.out --use_fast_math -gencode arch=compute_75,code=sm_75	 --extra-device-vectorization -I-I. 
+ 
+Running Full Benchmark  (All Sizes & Block Sizes)
+ 
+*** TESTING MATRIX SIZE: 1000 x 1000 ***
+========================== WITHOUT REGISTERS ==========================
+ 
+>>> Launching Block Size: 4 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 4
+addRowsFloatCpu took       :    0.000800133 seconds, addRowsFloatGpu took       :    0.000314272 seconds, speedup was:2.54599
+Block size for double precision row operations: 4
+addColumnsFloatCpu took    :    0.00616693 seconds, addColumnsFloatGpu took    :    0.000207488 seconds, speedup was:29.7219
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000314272 seconds, speedup was:0.00303455
+
+Block size for single precision column operations: 4
+addRowsDoubleCpu took      :    0.000836849 seconds, addRowsDoubleGpu took      :    0.000216544 seconds, speedup was:3.86457
+Block size for double precision column operations: 4
+addColumnsDoubleCpu took   :    0.00663304 seconds, addColumnsDoubleGpu took   :    0.000403712 seconds, speedup was:16.4301
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.000216544 seconds, speedup was:0.00440407
+ 
+>>> Launching Block Size: 8 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 8
+addRowsFloatCpu took       :    0.000802994 seconds, addRowsFloatGpu took       :    0.000311104 seconds, speedup was:2.58111
+Block size for double precision row operations: 8
+addColumnsFloatCpu took    :    0.00619102 seconds, addColumnsFloatGpu took    :    0.000194208 seconds, speedup was:31.8783
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000311104 seconds, speedup was:0.00306545
+
+Block size for single precision column operations: 8
+addRowsDoubleCpu took      :    0.000834942 seconds, addRowsDoubleGpu took      :    0.000202752 seconds, speedup was:4.11805
+Block size for double precision column operations: 8
+addColumnsDoubleCpu took   :    0.00664902 seconds, addColumnsDoubleGpu took   :    0.000387584 seconds, speedup was:17.155
+addRowsVectorDoubleCpu took:    1.19209e-06 seconds, addRowsVectorDoubleGpu took:    0.000202752 seconds, speedup was:0.00587956
+ 
+>>> Launching Block Size: 16 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 16
+addRowsFloatCpu took       :    0.00080204 seconds, addRowsFloatGpu took       :    0.000337568 seconds, speedup was:2.37594
+Block size for double precision row operations: 16
+addColumnsFloatCpu took    :    0.00616693 seconds, addColumnsFloatGpu took    :    0.000194656 seconds, speedup was:31.6812
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000337568 seconds, speedup was:0.00282513
+
+Block size for single precision column operations: 16
+addRowsDoubleCpu took      :    0.000837088 seconds, addRowsDoubleGpu took      :    0.000207456 seconds, speedup was:4.03501
+Block size for double precision column operations: 16
+addColumnsDoubleCpu took   :    0.0066359 seconds, addColumnsDoubleGpu took   :    0.000384192 seconds, speedup was:17.2724
+addRowsVectorDoubleCpu took:    1.19209e-06 seconds, addRowsVectorDoubleGpu took:    0.000207456 seconds, speedup was:0.00574624
+ 
+>>> Launching Block Size: 32 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 32
+addRowsFloatCpu took       :    0.000800848 seconds, addRowsFloatGpu took       :    0.000332736 seconds, speedup was:2.40686
+Block size for double precision row operations: 32
+addColumnsFloatCpu took    :    0.00617218 seconds, addColumnsFloatGpu took    :    0.000192032 seconds, speedup was:32.1414
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000332736 seconds, speedup was:0.00286616
+
+Block size for single precision column operations: 32
+addRowsDoubleCpu took      :    0.000848055 seconds, addRowsDoubleGpu took      :    0.000218016 seconds, speedup was:3.88987
+Block size for double precision column operations: 32
+addColumnsDoubleCpu took   :    0.006634 seconds, addColumnsDoubleGpu took   :    0.00038032 seconds, speedup was:17.4432
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.000218016 seconds, speedup was:0.00437433
+ 
+>>> Launching Block Size: 64 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 64
+addRowsFloatCpu took       :    0.000802994 seconds, addRowsFloatGpu took       :    0.000344928 seconds, speedup was:2.328
+Block size for double precision row operations: 64
+addColumnsFloatCpu took    :    0.00616598 seconds, addColumnsFloatGpu took    :    0.000190464 seconds, speedup was:32.3735
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000344928 seconds, speedup was:0.00276485
+
+Block size for single precision column operations: 64
+addRowsDoubleCpu took      :    0.000838995 seconds, addRowsDoubleGpu took      :    0.000231264 seconds, speedup was:3.62787
+Block size for double precision column operations: 64
+addColumnsDoubleCpu took   :    0.0066309 seconds, addColumnsDoubleGpu took   :    0.000380864 seconds, speedup was:17.4101
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.000231264 seconds, speedup was:0.00412375
+ 
+>>> Launching Block Size: 128 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 128
+addRowsFloatCpu took       :    0.000800848 seconds, addRowsFloatGpu took       :    0.000392288 seconds, speedup was:2.04148
+Block size for double precision row operations: 128
+addColumnsFloatCpu took    :    0.00616312 seconds, addColumnsFloatGpu took    :    0.000193024 seconds, speedup was:31.9293
+addRowsVectorFloatCpu took :    0 seconds, addRowsVectorFloatGpu took :    0.000392288 seconds, speedup was:0
+
+Block size for single precision column operations: 128
+addRowsDoubleCpu took      :    0.000838041 seconds, addRowsDoubleGpu took      :    0.000283296 seconds, speedup was:2.95818
+Block size for double precision column operations: 128
+addColumnsDoubleCpu took   :    0.00664282 seconds, addColumnsDoubleGpu took   :    0.000383584 seconds, speedup was:17.3178
+addRowsVectorDoubleCpu took:    1.19209e-06 seconds, addRowsVectorDoubleGpu took:    0.000283296 seconds, speedup was:0.00420794
+ 
+>>> Launching Block Size: 256 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 256
+addRowsFloatCpu took       :    0.000807047 seconds, addRowsFloatGpu took       :    0.00045248 seconds, speedup was:1.78361
+Block size for double precision row operations: 256
+addColumnsFloatCpu took    :    0.00616288 seconds, addColumnsFloatGpu took    :    0.000192416 seconds, speedup was:32.0289
+addRowsVectorFloatCpu took :    1.19209e-06 seconds, addRowsVectorFloatGpu took :    0.00045248 seconds, speedup was:0.00263458
+
+Block size for single precision column operations: 256
+addRowsDoubleCpu took      :    0.000868797 seconds, addRowsDoubleGpu took      :    0.00031792 seconds, speedup was:2.73275
+Block size for double precision column operations: 256
+addColumnsDoubleCpu took   :    0.00661707 seconds, addColumnsDoubleGpu took   :    0.000388544 seconds, speedup was:17.0304
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.00031792 seconds, speedup was:0.00299973
+ 
+>>> Launching Block Size: 512 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 512
+addRowsFloatCpu took       :    0.000796795 seconds, addRowsFloatGpu took       :    0.000565408 seconds, speedup was:1.40924
+Block size for double precision row operations: 512
+addColumnsFloatCpu took    :    0.00619602 seconds, addColumnsFloatGpu took    :    0.000198304 seconds, speedup was:31.2451
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000565408 seconds, speedup was:0.0016867
+
+Block size for single precision column operations: 512
+addRowsDoubleCpu took      :    0.000865936 seconds, addRowsDoubleGpu took      :    0.000526496 seconds, speedup was:1.64472
+Block size for double precision column operations: 512
+addColumnsDoubleCpu took   :    0.00662994 seconds, addColumnsDoubleGpu took   :    0.000396864 seconds, speedup was:16.7058
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.000526496 seconds, speedup was:0.00181136
+ 
+>>> Launching Block Size: 1024 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 1024
+addRowsFloatCpu took       :    0.000800848 seconds, addRowsFloatGpu took       :    0.000960736 seconds, speedup was:0.833578
+Block size for double precision row operations: 1024
+addColumnsFloatCpu took    :    0.00620818 seconds, addColumnsFloatGpu took    :    0.000201792 seconds, speedup was:30.7653
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000960736 seconds, speedup was:0.00099265
+
+Block size for single precision column operations: 1024
+addRowsDoubleCpu took      :    0.000872135 seconds, addRowsDoubleGpu took      :    0.000939712 seconds, speedup was:0.928088
+Block size for double precision column operations: 1024
+addColumnsDoubleCpu took   :    0.006603 seconds, addColumnsDoubleGpu took   :    0.000450944 seconds, speedup was:14.6426
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.000939712 seconds, speedup was:0.00101486
+ 
+========================== WITH REGISTERS ==========================
+ 
+>>> Launching Block Size: 4 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 4
+addRowsFloatCpu took       :    0.000795126 seconds, addRowsFloatGpu took       :    0.000257248 seconds, speedup was:3.09089
+Block size for double precision row operations: 4
+addColumnsFloatCpu took    :    0.00617194 seconds, addColumnsFloatGpu took    :    4.608e-05 seconds, speedup was:133.94
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000257248 seconds, speedup was:0.00370722
+
+Block size for single precision column operations: 4
+addRowsDoubleCpu took      :    0.000869989 seconds, addRowsDoubleGpu took      :    0.000120672 seconds, speedup was:7.20954
+Block size for double precision column operations: 4
+addColumnsDoubleCpu took   :    0.00662398 seconds, addColumnsDoubleGpu took   :    0.000119392 seconds, speedup was:55.481
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.000120672 seconds, speedup was:0.00790303
+ 
+>>> Launching Block Size: 8 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 8
+addRowsFloatCpu took       :    0.000803947 seconds, addRowsFloatGpu took       :    0.000264128 seconds, speedup was:3.04378
+Block size for double precision row operations: 8
+addColumnsFloatCpu took    :    0.00617099 seconds, addColumnsFloatGpu took    :    4.6272e-05 seconds, speedup was:133.363
+addRowsVectorFloatCpu took :    1.19209e-06 seconds, addRowsVectorFloatGpu took :    0.000264128 seconds, speedup was:0.00451332
+
+Block size for single precision column operations: 8
+addRowsDoubleCpu took      :    0.000854015 seconds, addRowsDoubleGpu took      :    0.000107424 seconds, speedup was:7.94995
+Block size for double precision column operations: 8
+addColumnsDoubleCpu took   :    0.00662899 seconds, addColumnsDoubleGpu took   :    0.000102496 seconds, speedup was:64.6756
+addRowsVectorDoubleCpu took:    2.14577e-06 seconds, addRowsVectorDoubleGpu took:    0.000107424 seconds, speedup was:0.0199747
+ 
+>>> Launching Block Size: 16 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 16
+addRowsFloatCpu took       :    0.00080204 seconds, addRowsFloatGpu took       :    0.000260256 seconds, speedup was:3.08174
+Block size for double precision row operations: 16
+addColumnsFloatCpu took    :    0.00616407 seconds, addColumnsFloatGpu took    :    4.6592e-05 seconds, speedup was:132.299
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000260256 seconds, speedup was:0.00366437
+
+Block size for single precision column operations: 16
+addRowsDoubleCpu took      :    0.000838041 seconds, addRowsDoubleGpu took      :    0.000111648 seconds, speedup was:7.5061
+Block size for double precision column operations: 16
+addColumnsDoubleCpu took   :    0.0066278 seconds, addColumnsDoubleGpu took   :    9.92e-05 seconds, speedup was:66.8125
+addRowsVectorDoubleCpu took:    1.19209e-06 seconds, addRowsVectorDoubleGpu took:    0.000111648 seconds, speedup was:0.0106772
+ 
+>>> Launching Block Size: 32 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 32
+addRowsFloatCpu took       :    0.000801086 seconds, addRowsFloatGpu took       :    0.000261696 seconds, speedup was:3.06113
+Block size for double precision row operations: 32
+addColumnsFloatCpu took    :    0.00616884 seconds, addColumnsFloatGpu took    :    4.4576e-05 seconds, speedup was:138.389
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000261696 seconds, speedup was:0.00364421
+
+Block size for single precision column operations: 32
+addRowsDoubleCpu took      :    0.000860214 seconds, addRowsDoubleGpu took      :    0.000118208 seconds, speedup was:7.27712
+Block size for double precision column operations: 32
+addColumnsDoubleCpu took   :    0.00661683 seconds, addColumnsDoubleGpu took   :    9.616e-05 seconds, speedup was:68.8106
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.000118208 seconds, speedup was:0.00806776
+ 
+>>> Launching Block Size: 64 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 64
+addRowsFloatCpu took       :    0.00079608 seconds, addRowsFloatGpu took       :    0.000248352 seconds, speedup was:3.20545
+Block size for double precision row operations: 64
+addColumnsFloatCpu took    :    0.00616884 seconds, addColumnsFloatGpu took    :    4.4352e-05 seconds, speedup was:139.088
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000248352 seconds, speedup was:0.00384001
+
+Block size for single precision column operations: 64
+addRowsDoubleCpu took      :    0.000859976 seconds, addRowsDoubleGpu took      :    0.000114592 seconds, speedup was:7.50468
+Block size for double precision column operations: 64
+addColumnsDoubleCpu took   :    0.00661492 seconds, addColumnsDoubleGpu took   :    9.7536e-05 seconds, speedup was:67.8203
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.000114592 seconds, speedup was:0.00832235
+ 
+>>> Launching Block Size: 128 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 128
+addRowsFloatCpu took       :    0.000799894 seconds, addRowsFloatGpu took       :    0.000276448 seconds, speedup was:2.89347
+Block size for double precision row operations: 128
+addColumnsFloatCpu took    :    0.00617695 seconds, addColumnsFloatGpu took    :    4.9984e-05 seconds, speedup was:123.579
+addRowsVectorFloatCpu took :    1.19209e-06 seconds, addRowsVectorFloatGpu took :    0.000276448 seconds, speedup was:0.00431218
+
+Block size for single precision column operations: 128
+addRowsDoubleCpu took      :    0.000853062 seconds, addRowsDoubleGpu took      :    0.000121056 seconds, speedup was:7.04684
+Block size for double precision column operations: 128
+addColumnsDoubleCpu took   :    0.00661492 seconds, addColumnsDoubleGpu took   :    0.000104768 seconds, speedup was:63.1388
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.000121056 seconds, speedup was:0.00787796
+ 
+>>> Launching Block Size: 256 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 256
+addRowsFloatCpu took       :    0.000800133 seconds, addRowsFloatGpu took       :    0.0003128 seconds, speedup was:2.55797
+Block size for double precision row operations: 256
+addColumnsFloatCpu took    :    0.0061779 seconds, addColumnsFloatGpu took    :    4.9568e-05 seconds, speedup was:124.635
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.0003128 seconds, speedup was:0.00304883
+
+Block size for single precision column operations: 256
+addRowsDoubleCpu took      :    0.000833988 seconds, addRowsDoubleGpu took      :    0.00018224 seconds, speedup was:4.57632
+Block size for double precision column operations: 256
+addColumnsDoubleCpu took   :    0.00666285 seconds, addColumnsDoubleGpu took   :    0.000128 seconds, speedup was:52.0535
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.00018224 seconds, speedup was:0.00523307
+ 
+>>> Launching Block Size: 512 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 512
+addRowsFloatCpu took       :    0.000800848 seconds, addRowsFloatGpu took       :    0.000450976 seconds, speedup was:1.77581
+Block size for double precision row operations: 512
+addColumnsFloatCpu took    :    0.00617313 seconds, addColumnsFloatGpu took    :    6.4384e-05 seconds, speedup was:95.8799
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000450976 seconds, speedup was:0.00211469
+
+Block size for single precision column operations: 512
+addRowsDoubleCpu took      :    0.000836134 seconds, addRowsDoubleGpu took      :    0.000343456 seconds, speedup was:2.43447
+Block size for double precision column operations: 512
+addColumnsDoubleCpu took   :    0.00662589 seconds, addColumnsDoubleGpu took   :    0.000205216 seconds, speedup was:32.2874
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.000343456 seconds, speedup was:0.0027767
+ 
+>>> Launching Block Size: 1024 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 1024
+addRowsFloatCpu took       :    0.000823975 seconds, addRowsFloatGpu took       :    0.000830336 seconds, speedup was:0.992339
+Block size for double precision row operations: 1024
+addColumnsFloatCpu took    :    0.00616908 seconds, addColumnsFloatGpu took    :    9.4624e-05 seconds, speedup was:65.1957
+addRowsVectorFloatCpu took :    9.53674e-07 seconds, addRowsVectorFloatGpu took :    0.000830336 seconds, speedup was:0.00114854
+
+Block size for single precision column operations: 1024
+addRowsDoubleCpu took      :    0.000838041 seconds, addRowsDoubleGpu took      :    0.000761792 seconds, speedup was:1.10009
+Block size for double precision column operations: 1024
+addColumnsDoubleCpu took   :    0.006639 seconds, addColumnsDoubleGpu took   :    0.000361984 seconds, speedup was:18.3406
+addRowsVectorDoubleCpu took:    9.53674e-07 seconds, addRowsVectorDoubleGpu took:    0.000761792 seconds, speedup was:0.00125188
+ 
+*** TESTING MATRIX SIZE: 5000 x 5000 ***
+========================== WITHOUT REGISTERS ==========================
+ 
+>>> Launching Block Size: 4 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 4
+addRowsFloatCpu took       :    0.020057 seconds, addRowsFloatGpu took       :    0.00128474 seconds, speedup was:15.6117
+Block size for double precision row operations: 4
+addColumnsFloatCpu took    :    0.214862 seconds, addColumnsFloatGpu took    :    0.00263987 seconds, speedup was:81.3911
+addRowsVectorFloatCpu took :    4.05312e-06 seconds, addRowsVectorFloatGpu took :    0.00128474 seconds, speedup was:0.00315482
+
+Block size for single precision column operations: 4
+addRowsDoubleCpu took      :    0.020731 seconds, addRowsDoubleGpu took      :    0.00228736 seconds, speedup was:9.06328
+Block size for double precision column operations: 4
+addColumnsDoubleCpu took   :    0.242299 seconds, addColumnsDoubleGpu took   :    0.00346138 seconds, speedup was:70.0008
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00228736 seconds, speedup was:0.00218889
+ 
+>>> Launching Block Size: 8 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 8
+addRowsFloatCpu took       :    0.020082 seconds, addRowsFloatGpu took       :    0.00125366 seconds, speedup was:16.0186
+Block size for double precision row operations: 8
+addColumnsFloatCpu took    :    0.216977 seconds, addColumnsFloatGpu took    :    0.00167798 seconds, speedup was:129.308
+addRowsVectorFloatCpu took :    5.00679e-06 seconds, addRowsVectorFloatGpu took :    0.00125366 seconds, speedup was:0.00399373
+
+Block size for single precision column operations: 8
+addRowsDoubleCpu took      :    0.0207319 seconds, addRowsDoubleGpu took      :    0.00210323 seconds, speedup was:9.85718
+Block size for double precision column operations: 8
+addColumnsDoubleCpu took   :    0.244431 seconds, addColumnsDoubleGpu took   :    0.00241786 seconds, speedup was:101.094
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00210323 seconds, speedup was:0.00238052
+ 
+>>> Launching Block Size: 16 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 16
+addRowsFloatCpu took       :    0.020056 seconds, addRowsFloatGpu took       :    0.00127344 seconds, speedup was:15.7495
+Block size for double precision row operations: 16
+addColumnsFloatCpu took    :    0.216799 seconds, addColumnsFloatGpu took    :    0.00169974 seconds, speedup was:127.548
+addRowsVectorFloatCpu took :    4.05312e-06 seconds, addRowsVectorFloatGpu took :    0.00127344 seconds, speedup was:0.00318281
+
+Block size for single precision column operations: 16
+addRowsDoubleCpu took      :    0.0206969 seconds, addRowsDoubleGpu took      :    0.0021608 seconds, speedup was:9.57834
+Block size for double precision column operations: 16
+addColumnsDoubleCpu took   :    0.244408 seconds, addColumnsDoubleGpu took   :    0.00212582 seconds, speedup was:114.971
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.0021608 seconds, speedup was:0.0023171
+ 
+>>> Launching Block Size: 32 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 32
+addRowsFloatCpu took       :    0.020071 seconds, addRowsFloatGpu took       :    0.00137155 seconds, speedup was:14.6338
+Block size for double precision row operations: 32
+addColumnsFloatCpu took    :    0.216751 seconds, addColumnsFloatGpu took    :    0.00166563 seconds, speedup was:130.131
+addRowsVectorFloatCpu took :    5.00679e-06 seconds, addRowsVectorFloatGpu took :    0.00137155 seconds, speedup was:0.00365046
+
+Block size for single precision column operations: 32
+addRowsDoubleCpu took      :    0.0206759 seconds, addRowsDoubleGpu took      :    0.00227984 seconds, speedup was:9.06901
+Block size for double precision column operations: 32
+addColumnsDoubleCpu took   :    0.244291 seconds, addColumnsDoubleGpu took   :    0.0020591 seconds, speedup was:118.64
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00227984 seconds, speedup was:0.00219611
+ 
+>>> Launching Block Size: 64 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 64
+addRowsFloatCpu took       :    0.020066 seconds, addRowsFloatGpu took       :    0.00136538 seconds, speedup was:14.6963
+Block size for double precision row operations: 64
+addColumnsFloatCpu took    :    0.243155 seconds, addColumnsFloatGpu took    :    0.00166461 seconds, speedup was:146.073
+addRowsVectorFloatCpu took :    4.05312e-06 seconds, addRowsVectorFloatGpu took :    0.00136538 seconds, speedup was:0.0029685
+
+Block size for single precision column operations: 64
+addRowsDoubleCpu took      :    0.0207212 seconds, addRowsDoubleGpu took      :    0.00220534 seconds, speedup was:9.3959
+Block size for double precision column operations: 64
+addColumnsDoubleCpu took   :    0.242617 seconds, addColumnsDoubleGpu took   :    0.00206125 seconds, speedup was:117.704
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00220534 seconds, speedup was:0.0022703
+ 
+>>> Launching Block Size: 128 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 128
+addRowsFloatCpu took       :    0.0200889 seconds, addRowsFloatGpu took       :    0.00134384 seconds, speedup was:14.9489
+Block size for double precision row operations: 128
+addColumnsFloatCpu took    :    0.2149 seconds, addColumnsFloatGpu took    :    0.00166208 seconds, speedup was:129.296
+addRowsVectorFloatCpu took :    5.00679e-06 seconds, addRowsVectorFloatGpu took :    0.00134384 seconds, speedup was:0.00372573
+
+Block size for single precision column operations: 128
+addRowsDoubleCpu took      :    0.0206611 seconds, addRowsDoubleGpu took      :    0.0021767 seconds, speedup was:9.49193
+Block size for double precision column operations: 128
+addColumnsDoubleCpu took   :    0.2417 seconds, addColumnsDoubleGpu took   :    0.00206 seconds, speedup was:117.33
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.0021767 seconds, speedup was:0.00230017
+ 
+>>> Launching Block Size: 256 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 256
+addRowsFloatCpu took       :    0.0200858 seconds, addRowsFloatGpu took       :    0.00175146 seconds, speedup was:11.4681
+Block size for double precision row operations: 256
+addColumnsFloatCpu took    :    0.215087 seconds, addColumnsFloatGpu took    :    0.00169773 seconds, speedup was:126.691
+addRowsVectorFloatCpu took :    5.00679e-06 seconds, addRowsVectorFloatGpu took :    0.00175146 seconds, speedup was:0.00285864
+
+Block size for single precision column operations: 256
+addRowsDoubleCpu took      :    0.020679 seconds, addRowsDoubleGpu took      :    0.00247136 seconds, speedup was:8.36746
+Block size for double precision column operations: 256
+addColumnsDoubleCpu took   :    0.242387 seconds, addColumnsDoubleGpu took   :    0.00209331 seconds, speedup was:115.791
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00247136 seconds, speedup was:0.00202593
+ 
+>>> Launching Block Size: 512 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 512
+addRowsFloatCpu took       :    0.020051 seconds, addRowsFloatGpu took       :    0.00246614 seconds, speedup was:8.13051
+Block size for double precision row operations: 512
+addColumnsFloatCpu took    :    0.216837 seconds, addColumnsFloatGpu took    :    0.00174333 seconds, speedup was:124.381
+addRowsVectorFloatCpu took :    5.00679e-06 seconds, addRowsVectorFloatGpu took :    0.00246614 seconds, speedup was:0.00203021
+
+Block size for single precision column operations: 512
+addRowsDoubleCpu took      :    0.0207658 seconds, addRowsDoubleGpu took      :    0.0031623 seconds, speedup was:6.56666
+Block size for double precision column operations: 512
+addColumnsDoubleCpu took   :    0.243961 seconds, addColumnsDoubleGpu took   :    0.0021504 seconds, speedup was:113.449
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.0031623 seconds, speedup was:0.00158327
+ 
+>>> Launching Block Size: 1024 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 1024
+addRowsFloatCpu took       :    0.020083 seconds, addRowsFloatGpu took       :    0.0046383 seconds, speedup was:4.3298
+Block size for double precision row operations: 1024
+addColumnsFloatCpu took    :    0.216883 seconds, addColumnsFloatGpu took    :    0.0018088 seconds, speedup was:119.904
+addRowsVectorFloatCpu took :    4.05312e-06 seconds, addRowsVectorFloatGpu took :    0.0046383 seconds, speedup was:0.000873836
+
+Block size for single precision column operations: 1024
+addRowsDoubleCpu took      :    0.020735 seconds, addRowsDoubleGpu took      :    0.00546173 seconds, speedup was:3.79642
+Block size for double precision column operations: 1024
+addColumnsDoubleCpu took   :    0.244053 seconds, addColumnsDoubleGpu took   :    0.00239987 seconds, speedup was:101.694
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00546173 seconds, speedup was:0.000916704
+ 
+========================== WITH REGISTERS ==========================
+ 
+>>> Launching Block Size: 4 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 4
+addRowsFloatCpu took       :    0.0200899 seconds, addRowsFloatGpu took       :    0.00112618 seconds, speedup was:17.839
+Block size for double precision row operations: 4
+addColumnsFloatCpu took    :    0.216751 seconds, addColumnsFloatGpu took    :    0.000472288 seconds, speedup was:458.938
+addRowsVectorFloatCpu took :    5.00679e-06 seconds, addRowsVectorFloatGpu took :    0.00112618 seconds, speedup was:0.00444583
+
+Block size for single precision column operations: 4
+addRowsDoubleCpu took      :    0.020705 seconds, addRowsDoubleGpu took      :    0.00208237 seconds, speedup was:9.943
+Block size for double precision column operations: 4
+addColumnsDoubleCpu took   :    0.244442 seconds, addColumnsDoubleGpu took   :    0.00207763 seconds, speedup was:117.654
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00208237 seconds, speedup was:0.00240437
+ 
+>>> Launching Block Size: 8 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 8
+addRowsFloatCpu took       :    0.0200579 seconds, addRowsFloatGpu took       :    0.00103923 seconds, speedup was:19.3007
+Block size for double precision row operations: 8
+addColumnsFloatCpu took    :    0.216945 seconds, addColumnsFloatGpu took    :    0.000329536 seconds, speedup was:658.335
+addRowsVectorFloatCpu took :    5.00679e-06 seconds, addRowsVectorFloatGpu took :    0.00103923 seconds, speedup was:0.00481778
+
+Block size for single precision column operations: 8
+addRowsDoubleCpu took      :    0.020679 seconds, addRowsDoubleGpu took      :    0.00111002 seconds, speedup was:18.6295
+Block size for double precision column operations: 8
+addColumnsDoubleCpu took   :    0.244049 seconds, addColumnsDoubleGpu took   :    0.00104234 seconds, speedup was:234.136
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00111002 seconds, speedup was:0.00451056
+ 
+>>> Launching Block Size: 16 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 16
+addRowsFloatCpu took       :    0.0200469 seconds, addRowsFloatGpu took       :    0.00103862 seconds, speedup was:19.3014
+Block size for double precision row operations: 16
+addColumnsFloatCpu took    :    0.217097 seconds, addColumnsFloatGpu took    :    0.00033056 seconds, speedup was:656.755
+addRowsVectorFloatCpu took :    4.05312e-06 seconds, addRowsVectorFloatGpu took :    0.00103862 seconds, speedup was:0.00390239
+
+Block size for single precision column operations: 16
+addRowsDoubleCpu took      :    0.0207031 seconds, addRowsDoubleGpu took      :    0.00106525 seconds, speedup was:19.435
+Block size for double precision column operations: 16
+addColumnsDoubleCpu took   :    0.243924 seconds, addColumnsDoubleGpu took   :    0.000768192 seconds, speedup was:317.53
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00106525 seconds, speedup was:0.00470012
+ 
+>>> Launching Block Size: 32 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 32
+addRowsFloatCpu took       :    0.0200651 seconds, addRowsFloatGpu took       :    0.00104557 seconds, speedup was:19.1906
+Block size for double precision row operations: 32
+addColumnsFloatCpu took    :    0.216797 seconds, addColumnsFloatGpu took    :    0.000315264 seconds, speedup was:687.669
+addRowsVectorFloatCpu took :    3.8147e-06 seconds, addRowsVectorFloatGpu took :    0.00104557 seconds, speedup was:0.00364844
+
+Block size for single precision column operations: 32
+addRowsDoubleCpu took      :    0.020725 seconds, addRowsDoubleGpu took      :    0.00105882 seconds, speedup was:19.5738
+Block size for double precision column operations: 32
+addColumnsDoubleCpu took   :    0.244418 seconds, addColumnsDoubleGpu took   :    0.00064704 seconds, speedup was:377.748
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00105882 seconds, speedup was:0.00472867
+ 
+>>> Launching Block Size: 64 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 64
+addRowsFloatCpu took       :    0.0201039 seconds, addRowsFloatGpu took       :    0.00106694 seconds, speedup was:18.8425
+Block size for double precision row operations: 64
+addColumnsFloatCpu took    :    0.216845 seconds, addColumnsFloatGpu took    :    0.000312768 seconds, speedup was:693.31
+addRowsVectorFloatCpu took :    4.05312e-06 seconds, addRowsVectorFloatGpu took :    0.00106694 seconds, speedup was:0.00379881
+
+Block size for single precision column operations: 64
+addRowsDoubleCpu took      :    0.02069 seconds, addRowsDoubleGpu took      :    0.00106538 seconds, speedup was:19.4203
+Block size for double precision column operations: 64
+addColumnsDoubleCpu took   :    0.24402 seconds, addColumnsDoubleGpu took   :    0.000651008 seconds, speedup was:374.834
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00106538 seconds, speedup was:0.00469955
+ 
+>>> Launching Block Size: 128 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 128
+addRowsFloatCpu took       :    0.020102 seconds, addRowsFloatGpu took       :    0.00104685 seconds, speedup was:19.2024
+Block size for double precision row operations: 128
+addColumnsFloatCpu took    :    0.217212 seconds, addColumnsFloatGpu took    :    0.0002992 seconds, speedup was:725.976
+addRowsVectorFloatCpu took :    5.00679e-06 seconds, addRowsVectorFloatGpu took :    0.00104685 seconds, speedup was:0.00478273
+
+Block size for single precision column operations: 128
+addRowsDoubleCpu took      :    0.0206971 seconds, addRowsDoubleGpu took      :    0.00105392 seconds, speedup was:19.6382
+Block size for double precision column operations: 128
+addColumnsDoubleCpu took   :    0.244022 seconds, addColumnsDoubleGpu took   :    0.000635744 seconds, speedup was:383.837
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00105392 seconds, speedup was:0.00475064
+ 
+>>> Launching Block Size: 256 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 256
+addRowsFloatCpu took       :    0.020052 seconds, addRowsFloatGpu took       :    0.001084 seconds, speedup was:18.4981
+Block size for double precision row operations: 256
+addColumnsFloatCpu took    :    0.21496 seconds, addColumnsFloatGpu took    :    0.000312416 seconds, speedup was:688.057
+addRowsVectorFloatCpu took :    5.00679e-06 seconds, addRowsVectorFloatGpu took :    0.001084 seconds, speedup was:0.00461881
+
+Block size for single precision column operations: 256
+addRowsDoubleCpu took      :    0.020674 seconds, addRowsDoubleGpu took      :    0.00142 seconds, speedup was:14.5591
+Block size for double precision column operations: 256
+addColumnsDoubleCpu took   :    0.241675 seconds, addColumnsDoubleGpu took   :    0.000674368 seconds, speedup was:358.372
+addRowsVectorDoubleCpu took:    6.19888e-06 seconds, addRowsVectorDoubleGpu took:    0.00142 seconds, speedup was:0.00436541
+ 
+>>> Launching Block Size: 512 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 512
+addRowsFloatCpu took       :    0.0200689 seconds, addRowsFloatGpu took       :    0.00180842 seconds, speedup was:11.0975
+Block size for double precision row operations: 512
+addColumnsFloatCpu took    :    0.21504 seconds, addColumnsFloatGpu took    :    0.000360064 seconds, speedup was:597.227
+addRowsVectorFloatCpu took :    4.05312e-06 seconds, addRowsVectorFloatGpu took :    0.00180842 seconds, speedup was:0.00224125
+
+Block size for single precision column operations: 512
+addRowsDoubleCpu took      :    0.0207009 seconds, addRowsDoubleGpu took      :    0.00221034 seconds, speedup was:9.36551
+Block size for double precision column operations: 512
+addColumnsDoubleCpu took   :    0.241612 seconds, addColumnsDoubleGpu took   :    0.00113434 seconds, speedup was:212.999
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00221034 seconds, speedup was:0.00226517
+ 
+>>> Launching Block Size: 1024 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 1024
+addRowsFloatCpu took       :    0.0200498 seconds, addRowsFloatGpu took       :    0.00413955 seconds, speedup was:4.84347
+Block size for double precision row operations: 1024
+addColumnsFloatCpu took    :    0.214943 seconds, addColumnsFloatGpu took    :    0.000534464 seconds, speedup was:402.166
+addRowsVectorFloatCpu took :    4.05312e-06 seconds, addRowsVectorFloatGpu took :    0.00413955 seconds, speedup was:0.000979119
+
+Block size for single precision column operations: 1024
+addRowsDoubleCpu took      :    0.0206659 seconds, addRowsDoubleGpu took      :    0.00476176 seconds, speedup was:4.33997
+Block size for double precision column operations: 1024
+addColumnsDoubleCpu took   :    0.241749 seconds, addColumnsDoubleGpu took   :    0.00208243 seconds, speedup was:116.09
+addRowsVectorDoubleCpu took:    5.00679e-06 seconds, addRowsVectorDoubleGpu took:    0.00476176 seconds, speedup was:0.00105146
+ 
+*** TESTING MATRIX SIZE: 10000 x 10000 ***
+========================== WITHOUT REGISTERS ==========================
+ 
+>>> Launching Block Size: 4 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 4
+addRowsFloatCpu took       :    0.0803771 seconds, addRowsFloatGpu took       :    0.00444304 seconds, speedup was:18.0906
+Block size for double precision row operations: 4
+addColumnsFloatCpu took    :    0.959735 seconds, addColumnsFloatGpu took    :    0.0115384 seconds, speedup was:83.1773
+addRowsVectorFloatCpu took :    8.82149e-06 seconds, addRowsVectorFloatGpu took :    0.00444304 seconds, speedup was:0.00198546
+
+Block size for single precision column operations: 4
+addRowsDoubleCpu took      :    0.082387 seconds, addRowsDoubleGpu took      :    0.00929139 seconds, speedup was:8.86702
+Block size for double precision column operations: 4
+addColumnsDoubleCpu took   :    1.14474 seconds, addColumnsDoubleGpu took   :    0.01403 seconds, speedup was:81.5921
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00929139 seconds, speedup was:0.00107773
+ 
+>>> Launching Block Size: 8 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 8
+addRowsFloatCpu took       :    0.0803361 seconds, addRowsFloatGpu took       :    0.00395408 seconds, speedup was:20.3173
+Block size for double precision row operations: 8
+addColumnsFloatCpu took    :    0.959584 seconds, addColumnsFloatGpu took    :    0.0060353 seconds, speedup was:158.995
+addRowsVectorFloatCpu took :    8.82149e-06 seconds, addRowsVectorFloatGpu took :    0.00395408 seconds, speedup was:0.00223098
+
+Block size for single precision column operations: 8
+addRowsDoubleCpu took      :    0.082366 seconds, addRowsDoubleGpu took      :    0.00760771 seconds, speedup was:10.8266
+Block size for double precision column operations: 8
+addColumnsDoubleCpu took   :    1.14782 seconds, addColumnsDoubleGpu took   :    0.00848755 seconds, speedup was:135.235
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00760771 seconds, speedup was:0.00131624
+ 
+>>> Launching Block Size: 16 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 16
+addRowsFloatCpu took       :    0.0801711 seconds, addRowsFloatGpu took       :    0.00400368 seconds, speedup was:20.0244
+Block size for double precision row operations: 16
+addColumnsFloatCpu took    :    0.959901 seconds, addColumnsFloatGpu took    :    0.0042047 seconds, speedup was:228.292
+addRowsVectorFloatCpu took :    9.05991e-06 seconds, addRowsVectorFloatGpu took :    0.00400368 seconds, speedup was:0.00226289
+
+Block size for single precision column operations: 16
+addRowsDoubleCpu took      :    0.0823848 seconds, addRowsDoubleGpu took      :    0.00728986 seconds, speedup was:11.3013
+Block size for double precision column operations: 16
+addColumnsDoubleCpu took   :    1.23719 seconds, addColumnsDoubleGpu took   :    0.00490342 seconds, speedup was:252.311
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00728986 seconds, speedup was:0.00137363
+ 
+>>> Launching Block Size: 32 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 32
+addRowsFloatCpu took       :    0.0802772 seconds, addRowsFloatGpu took       :    0.00391533 seconds, speedup was:20.5033
+Block size for double precision row operations: 32
+addColumnsFloatCpu took    :    0.961267 seconds, addColumnsFloatGpu took    :    0.00358998 seconds, speedup was:267.764
+addRowsVectorFloatCpu took :    8.82149e-06 seconds, addRowsVectorFloatGpu took :    0.00391533 seconds, speedup was:0.00225306
+
+Block size for single precision column operations: 32
+addRowsDoubleCpu took      :    0.082489 seconds, addRowsDoubleGpu took      :    0.00770518 seconds, speedup was:10.7057
+Block size for double precision column operations: 32
+addColumnsDoubleCpu took   :    1.14497 seconds, addColumnsDoubleGpu took   :    0.00437626 seconds, speedup was:261.632
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00770518 seconds, speedup was:0.00129959
+ 
+>>> Launching Block Size: 64 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 64
+addRowsFloatCpu took       :    0.0802181 seconds, addRowsFloatGpu took       :    0.00401498 seconds, speedup was:19.9797
+Block size for double precision row operations: 64
+addColumnsFloatCpu took    :    0.96085 seconds, addColumnsFloatGpu took    :    0.00333587 seconds, speedup was:288.036
+addRowsVectorFloatCpu took :    9.05991e-06 seconds, addRowsVectorFloatGpu took :    0.00401498 seconds, speedup was:0.00225653
+
+Block size for single precision column operations: 64
+addRowsDoubleCpu took      :    0.0823629 seconds, addRowsDoubleGpu took      :    0.00742784 seconds, speedup was:11.0884
+Block size for double precision column operations: 64
+addColumnsDoubleCpu took   :    1.14387 seconds, addColumnsDoubleGpu took   :    0.00402656 seconds, speedup was:284.081
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00742784 seconds, speedup was:0.00134811
+ 
+>>> Launching Block Size: 128 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 128
+addRowsFloatCpu took       :    0.080236 seconds, addRowsFloatGpu took       :    0.00422333 seconds, speedup was:18.9983
+Block size for double precision row operations: 128
+addColumnsFloatCpu took    :    0.960661 seconds, addColumnsFloatGpu took    :    0.00330957 seconds, speedup was:290.268
+addRowsVectorFloatCpu took :    9.05991e-06 seconds, addRowsVectorFloatGpu took :    0.00422333 seconds, speedup was:0.00214521
+
+Block size for single precision column operations: 128
+addRowsDoubleCpu took      :    0.0823698 seconds, addRowsDoubleGpu took      :    0.00744253 seconds, speedup was:11.0675
+Block size for double precision column operations: 128
+addColumnsDoubleCpu took   :    1.14408 seconds, addColumnsDoubleGpu took   :    0.00399248 seconds, speedup was:286.558
+addRowsVectorDoubleCpu took:    9.77516e-06 seconds, addRowsVectorDoubleGpu took:    0.00744253 seconds, speedup was:0.00131342
+ 
+>>> Launching Block Size: 256 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 256
+addRowsFloatCpu took       :    0.0802441 seconds, addRowsFloatGpu took       :    0.00406176 seconds, speedup was:19.756
+Block size for double precision row operations: 256
+addColumnsFloatCpu took    :    0.968496 seconds, addColumnsFloatGpu took    :    0.00330736 seconds, speedup was:292.83
+addRowsVectorFloatCpu took :    9.05991e-06 seconds, addRowsVectorFloatGpu took :    0.00406176 seconds, speedup was:0.00223054
+
+Block size for single precision column operations: 256
+addRowsDoubleCpu took      :    0.0825319 seconds, addRowsDoubleGpu took      :    0.00727818 seconds, speedup was:11.3396
+Block size for double precision column operations: 256
+addColumnsDoubleCpu took   :    1.16131 seconds, addColumnsDoubleGpu took   :    0.00397552 seconds, speedup was:292.116
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00727818 seconds, speedup was:0.00137584
+ 
+>>> Launching Block Size: 512 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 512
+addRowsFloatCpu took       :    0.080301 seconds, addRowsFloatGpu took       :    0.00485773 seconds, speedup was:16.5306
+Block size for double precision row operations: 512
+addColumnsFloatCpu took    :    0.970073 seconds, addColumnsFloatGpu took    :    0.00345686 seconds, speedup was:280.622
+addRowsVectorFloatCpu took :    9.05991e-06 seconds, addRowsVectorFloatGpu took :    0.00485773 seconds, speedup was:0.00186505
+
+Block size for single precision column operations: 512
+addRowsDoubleCpu took      :    0.0824099 seconds, addRowsDoubleGpu took      :    0.00778893 seconds, speedup was:10.5804
+Block size for double precision column operations: 512
+addColumnsDoubleCpu took   :    1.1595 seconds, addColumnsDoubleGpu took   :    0.00414112 seconds, speedup was:279.997
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00778893 seconds, speedup was:0.00128562
+ 
+>>> Launching Block Size: 1024 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 1024
+addRowsFloatCpu took       :    0.0802009 seconds, addRowsFloatGpu took       :    0.0084983 seconds, speedup was:9.43728
+Block size for double precision row operations: 1024
+addColumnsFloatCpu took    :    0.968309 seconds, addColumnsFloatGpu took    :    0.00364134 seconds, speedup was:265.921
+addRowsVectorFloatCpu took :    1.3113e-05 seconds, addRowsVectorFloatGpu took :    0.0084983 seconds, speedup was:0.00154302
+
+Block size for single precision column operations: 1024
+addRowsDoubleCpu took      :    0.082464 seconds, addRowsDoubleGpu took      :    0.0113655 seconds, speedup was:7.25564
+Block size for double precision column operations: 1024
+addColumnsDoubleCpu took   :    1.1605 seconds, addColumnsDoubleGpu took   :    0.00445315 seconds, speedup was:260.602
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.0113655 seconds, speedup was:0.00088105
+ 
+========================== WITH REGISTERS ==========================
+ 
+>>> Launching Block Size: 4 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 4
+addRowsFloatCpu took       :    0.097357 seconds, addRowsFloatGpu took       :    0.00378896 seconds, speedup was:25.6949
+Block size for double precision row operations: 4
+addColumnsFloatCpu took    :    1.03397 seconds, addColumnsFloatGpu took    :    0.00204432 seconds, speedup was:505.775
+addRowsVectorFloatCpu took :    9.77516e-06 seconds, addRowsVectorFloatGpu took :    0.00378896 seconds, speedup was:0.00257991
+
+Block size for single precision column operations: 4
+addRowsDoubleCpu took      :    0.0823681 seconds, addRowsDoubleGpu took      :    0.00781603 seconds, speedup was:10.5384
+Block size for double precision column operations: 4
+addColumnsDoubleCpu took   :    1.16278 seconds, addColumnsDoubleGpu took   :    0.00780758 seconds, speedup was:148.93
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00781603 seconds, speedup was:0.00128116
+ 
+>>> Launching Block Size: 8 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 8
+addRowsFloatCpu took       :    0.080276 seconds, addRowsFloatGpu took       :    0.00350618 seconds, speedup was:22.8956
+Block size for double precision row operations: 8
+addColumnsFloatCpu took    :    0.968906 seconds, addColumnsFloatGpu took    :    0.00183731 seconds, speedup was:527.35
+addRowsVectorFloatCpu took :    9.05991e-06 seconds, addRowsVectorFloatGpu took :    0.00350618 seconds, speedup was:0.00258398
+
+Block size for single precision column operations: 8
+addRowsDoubleCpu took      :    0.0823879 seconds, addRowsDoubleGpu took      :    0.00400755 seconds, speedup was:20.5582
+Block size for double precision column operations: 8
+addColumnsDoubleCpu took   :    1.15968 seconds, addColumnsDoubleGpu took   :    0.0046935 seconds, speedup was:247.083
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00400755 seconds, speedup was:0.00249868
+ 
+>>> Launching Block Size: 16 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 16
+addRowsFloatCpu took       :    0.0802681 seconds, addRowsFloatGpu took       :    0.00353683 seconds, speedup was:22.6949
+Block size for double precision row operations: 16
+addColumnsFloatCpu took    :    0.960143 seconds, addColumnsFloatGpu took    :    0.00184339 seconds, speedup was:520.857
+addRowsVectorFloatCpu took :    7.86781e-06 seconds, addRowsVectorFloatGpu took :    0.00353683 seconds, speedup was:0.00222454
+
+Block size for single precision column operations: 16
+addRowsDoubleCpu took      :    0.0822902 seconds, addRowsDoubleGpu took      :    0.00522784 seconds, speedup was:15.7408
+Block size for double precision column operations: 16
+addColumnsDoubleCpu took   :    1.14435 seconds, addColumnsDoubleGpu took   :    0.00273264 seconds, speedup was:418.77
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00522784 seconds, speedup was:0.00191543
+ 
+>>> Launching Block Size: 32 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 32
+addRowsFloatCpu took       :    0.080281 seconds, addRowsFloatGpu took       :    0.00339674 seconds, speedup was:23.6348
+Block size for double precision row operations: 32
+addColumnsFloatCpu took    :    0.95917 seconds, addColumnsFloatGpu took    :    0.00116534 seconds, speedup was:823.079
+addRowsVectorFloatCpu took :    9.05991e-06 seconds, addRowsVectorFloatGpu took :    0.00339674 seconds, speedup was:0.00266724
+
+Block size for single precision column operations: 32
+addRowsDoubleCpu took      :    0.082339 seconds, addRowsDoubleGpu took      :    0.00525574 seconds, speedup was:15.6665
+Block size for double precision column operations: 32
+addColumnsDoubleCpu took   :    1.14494 seconds, addColumnsDoubleGpu took   :    0.00213744 seconds, speedup was:535.66
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00525574 seconds, speedup was:0.00190526
+ 
+>>> Launching Block Size: 64 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 64
+addRowsFloatCpu took       :    0.080173 seconds, addRowsFloatGpu took       :    0.00345248 seconds, speedup was:23.2219
+Block size for double precision row operations: 64
+addColumnsFloatCpu took    :    0.960445 seconds, addColumnsFloatGpu took    :    0.00111178 seconds, speedup was:863.883
+addRowsVectorFloatCpu took :    9.05991e-06 seconds, addRowsVectorFloatGpu took :    0.00345248 seconds, speedup was:0.00262417
+
+Block size for single precision column operations: 64
+addRowsDoubleCpu took      :    0.0823331 seconds, addRowsDoubleGpu took      :    0.00517702 seconds, speedup was:15.9036
+Block size for double precision column operations: 64
+addColumnsDoubleCpu took   :    1.14447 seconds, addColumnsDoubleGpu took   :    0.00209386 seconds, speedup was:546.586
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00517702 seconds, speedup was:0.00193423
+ 
+>>> Launching Block Size: 128 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 128
+addRowsFloatCpu took       :    0.080301 seconds, addRowsFloatGpu took       :    0.00344029 seconds, speedup was:23.3414
+Block size for double precision row operations: 128
+addColumnsFloatCpu took    :    0.960346 seconds, addColumnsFloatGpu took    :    0.00103629 seconds, speedup was:926.717
+addRowsVectorFloatCpu took :    9.05991e-06 seconds, addRowsVectorFloatGpu took :    0.00344029 seconds, speedup was:0.00263347
+
+Block size for single precision column operations: 128
+addRowsDoubleCpu took      :    0.0823891 seconds, addRowsDoubleGpu took      :    0.00507018 seconds, speedup was:16.2498
+Block size for double precision column operations: 128
+addColumnsDoubleCpu took   :    1.14435 seconds, addColumnsDoubleGpu took   :    0.0020609 seconds, speedup was:555.266
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00507018 seconds, speedup was:0.001975
+ 
+>>> Launching Block Size: 256 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 256
+addRowsFloatCpu took       :    0.0801768 seconds, addRowsFloatGpu took       :    0.00337014 seconds, speedup was:23.7903
+Block size for double precision row operations: 256
+addColumnsFloatCpu took    :    0.969433 seconds, addColumnsFloatGpu took    :    0.00107779 seconds, speedup was:899.462
+addRowsVectorFloatCpu took :    9.05991e-06 seconds, addRowsVectorFloatGpu took :    0.00337014 seconds, speedup was:0.00268828
+
+Block size for single precision column operations: 256
+addRowsDoubleCpu took      :    0.08237 seconds, addRowsDoubleGpu took      :    0.0057383 seconds, speedup was:14.3544
+Block size for double precision column operations: 256
+addColumnsDoubleCpu took   :    1.2495 seconds, addColumnsDoubleGpu took   :    0.00211997 seconds, speedup was:589.397
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.0057383 seconds, speedup was:0.00174504
+ 
+>>> Launching Block Size: 512 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 512
+addRowsFloatCpu took       :    0.0802879 seconds, addRowsFloatGpu took       :    0.00425642 seconds, speedup was:18.8628
+Block size for double precision row operations: 512
+addColumnsFloatCpu took    :    0.959254 seconds, addColumnsFloatGpu took    :    0.00116784 seconds, speedup was:821.392
+addRowsVectorFloatCpu took :    8.10623e-06 seconds, addRowsVectorFloatGpu took :    0.00425642 seconds, speedup was:0.00190447
+
+Block size for single precision column operations: 512
+addRowsDoubleCpu took      :    0.082351 seconds, addRowsDoubleGpu took      :    0.00690579 seconds, speedup was:11.9249
+Block size for double precision column operations: 512
+addColumnsDoubleCpu took   :    1.14412 seconds, addColumnsDoubleGpu took   :    0.0022528 seconds, speedup was:507.866
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.00690579 seconds, speedup was:0.00145003
+ 
+>>> Launching Block Size: 1024 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 1024
+addRowsFloatCpu took       :    0.080235 seconds, addRowsFloatGpu took       :    0.00867683 seconds, speedup was:9.24704
+Block size for double precision row operations: 1024
+addColumnsFloatCpu took    :    0.96834 seconds, addColumnsFloatGpu took    :    0.00141392 seconds, speedup was:684.862
+addRowsVectorFloatCpu took :    8.10623e-06 seconds, addRowsVectorFloatGpu took :    0.00867683 seconds, speedup was:0.000934239
+
+Block size for single precision column operations: 1024
+addRowsDoubleCpu took      :    0.0823839 seconds, addRowsDoubleGpu took      :    0.0112781 seconds, speedup was:7.30476
+Block size for double precision column operations: 1024
+addColumnsDoubleCpu took   :    1.16021 seconds, addColumnsDoubleGpu took   :    0.00416704 seconds, speedup was:278.425
+addRowsVectorDoubleCpu took:    1.00136e-05 seconds, addRowsVectorDoubleGpu took:    0.0112781 seconds, speedup was:0.000887877
+ 
+*** TESTING MATRIX SIZE: 25000 x 25000 ***
+========================== WITHOUT REGISTERS ==========================
+ 
+>>> Launching Block Size: 4 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 4
+addRowsFloatCpu took       :    0.501673 seconds, addRowsFloatGpu took       :    0.0236825 seconds, speedup was:21.1833
+Block size for double precision row operations: 4
+addColumnsFloatCpu took    :    9.48602 seconds, addColumnsFloatGpu took    :    0.0574505 seconds, speedup was:165.116
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.0236825 seconds, speedup was:0.00092619
+
+Block size for single precision column operations: 4
+addRowsDoubleCpu took      :    0.514675 seconds, addRowsDoubleGpu took      :    0.0494373 seconds, speedup was:10.4107
+Block size for double precision column operations: 4
+addColumnsDoubleCpu took   :    10.7937 seconds, addColumnsDoubleGpu took   :    0.0737242 seconds, speedup was:146.407
+addRowsVectorDoubleCpu took:    2.38419e-05 seconds, addRowsVectorDoubleGpu took:    0.0494373 seconds, speedup was:0.000482264
+ 
+>>> Launching Block Size: 8 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 8
+addRowsFloatCpu took       :    0.501422 seconds, addRowsFloatGpu took       :    0.0224291 seconds, speedup was:22.3559
+Block size for double precision row operations: 8
+addColumnsFloatCpu took    :    9.38008 seconds, addColumnsFloatGpu took    :    0.0366846 seconds, speedup was:255.695
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.0224291 seconds, speedup was:0.000977949
+
+Block size for single precision column operations: 8
+addRowsDoubleCpu took      :    0.514453 seconds, addRowsDoubleGpu took      :    0.0445108 seconds, speedup was:11.5579
+Block size for double precision column operations: 8
+addColumnsDoubleCpu took   :    10.3573 seconds, addColumnsDoubleGpu took   :    0.0511007 seconds, speedup was:202.685
+addRowsVectorDoubleCpu took:    2.40803e-05 seconds, addRowsVectorDoubleGpu took:    0.0445108 seconds, speedup was:0.000540998
+ 
+>>> Launching Block Size: 16 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 16
+addRowsFloatCpu took       :    0.501398 seconds, addRowsFloatGpu took       :    0.0228198 seconds, speedup was:21.9721
+Block size for double precision row operations: 16
+addColumnsFloatCpu took    :    9.95521 seconds, addColumnsFloatGpu took    :    0.0265377 seconds, speedup was:375.135
+addRowsVectorFloatCpu took :    2.21729e-05 seconds, addRowsVectorFloatGpu took :    0.0228198 seconds, speedup was:0.000971654
+
+Block size for single precision column operations: 16
+addRowsDoubleCpu took      :    0.514482 seconds, addRowsDoubleGpu took      :    0.0440991 seconds, speedup was:11.6665
+Block size for double precision column operations: 16
+addColumnsDoubleCpu took   :    10.5004 seconds, addColumnsDoubleGpu took   :    0.0306094 seconds, speedup was:343.046
+addRowsVectorDoubleCpu took:    2.38419e-05 seconds, addRowsVectorDoubleGpu took:    0.0440991 seconds, speedup was:0.000540642
+ 
+>>> Launching Block Size: 32 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 32
+addRowsFloatCpu took       :    0.503286 seconds, addRowsFloatGpu took       :    0.031044 seconds, speedup was:16.212
+Block size for double precision row operations: 32
+addColumnsFloatCpu took    :    8.99427 seconds, addColumnsFloatGpu took    :    0.0179319 seconds, speedup was:501.578
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.031044 seconds, speedup was:0.000706563
+
+Block size for single precision column operations: 32
+addRowsDoubleCpu took      :    0.51469 seconds, addRowsDoubleGpu took      :    0.0650315 seconds, speedup was:7.91447
+Block size for double precision column operations: 32
+addColumnsDoubleCpu took   :    10.197 seconds, addColumnsDoubleGpu took   :    0.0209351 seconds, speedup was:487.078
+addRowsVectorDoubleCpu took:    2.40803e-05 seconds, addRowsVectorDoubleGpu took:    0.0650315 seconds, speedup was:0.000370286
+ 
+>>> Launching Block Size: 64 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 64
+addRowsFloatCpu took       :    0.501437 seconds, addRowsFloatGpu took       :    0.031478 seconds, speedup was:15.9297
+Block size for double precision row operations: 64
+addColumnsFloatCpu took    :    9.68111 seconds, addColumnsFloatGpu took    :    0.01265 seconds, speedup was:765.302
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.031478 seconds, speedup was:0.000696819
+
+Block size for single precision column operations: 64
+addRowsDoubleCpu took      :    0.515263 seconds, addRowsDoubleGpu took      :    0.065156 seconds, speedup was:7.90814
+Block size for double precision column operations: 64
+addColumnsDoubleCpu took   :    10.2495 seconds, addColumnsDoubleGpu took   :    0.0146876 seconds, speedup was:697.837
+addRowsVectorDoubleCpu took:    2.40803e-05 seconds, addRowsVectorDoubleGpu took:    0.065156 seconds, speedup was:0.000369579
+ 
+>>> Launching Block Size: 128 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 128
+addRowsFloatCpu took       :    0.501295 seconds, addRowsFloatGpu took       :    0.0328723 seconds, speedup was:15.2498
+Block size for double precision row operations: 128
+addColumnsFloatCpu took    :    9.55822 seconds, addColumnsFloatGpu took    :    0.0126364 seconds, speedup was:756.407
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.0328723 seconds, speedup was:0.000667265
+
+Block size for single precision column operations: 128
+addRowsDoubleCpu took      :    0.514655 seconds, addRowsDoubleGpu took      :    0.06554 seconds, speedup was:7.85253
+Block size for double precision column operations: 128
+addColumnsDoubleCpu took   :    10.1956 seconds, addColumnsDoubleGpu took   :    0.0146804 seconds, speedup was:694.504
+addRowsVectorDoubleCpu took:    2.5034e-05 seconds, addRowsVectorDoubleGpu took:    0.06554 seconds, speedup was:0.000381964
+ 
+>>> Launching Block Size: 256 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 256
+addRowsFloatCpu took       :    0.501166 seconds, addRowsFloatGpu took       :    0.034949 seconds, speedup was:14.3399
+Block size for double precision row operations: 256
+addColumnsFloatCpu took    :    9.59082 seconds, addColumnsFloatGpu took    :    0.0127981 seconds, speedup was:749.391
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.034949 seconds, speedup was:0.000627614
+
+Block size for single precision column operations: 256
+addRowsDoubleCpu took      :    0.514633 seconds, addRowsDoubleGpu took      :    0.0670126 seconds, speedup was:7.67965
+Block size for double precision column operations: 256
+addColumnsDoubleCpu took   :    9.61351 seconds, addColumnsDoubleGpu took   :    0.0146365 seconds, speedup was:656.817
+addRowsVectorDoubleCpu took:    2.47955e-05 seconds, addRowsVectorDoubleGpu took:    0.0670126 seconds, speedup was:0.000370013
+ 
+>>> Launching Block Size: 512 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 512
+addRowsFloatCpu took       :    0.501163 seconds, addRowsFloatGpu took       :    0.0376429 seconds, speedup was:13.3136
+Block size for double precision row operations: 512
+addColumnsFloatCpu took    :    9.71277 seconds, addColumnsFloatGpu took    :    0.0131338 seconds, speedup was:739.527
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.0376429 seconds, speedup was:0.0005827
+
+Block size for single precision column operations: 512
+addRowsDoubleCpu took      :    0.514445 seconds, addRowsDoubleGpu took      :    0.0698504 seconds, speedup was:7.36495
+Block size for double precision column operations: 512
+addColumnsDoubleCpu took   :    10.1481 seconds, addColumnsDoubleGpu took   :    0.0149466 seconds, speedup was:678.955
+addRowsVectorDoubleCpu took:    2.40803e-05 seconds, addRowsVectorDoubleGpu took:    0.0698504 seconds, speedup was:0.000344741
+ 
+>>> Launching Block Size: 1024 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 1024
+addRowsFloatCpu took       :    0.501343 seconds, addRowsFloatGpu took       :    0.0544002 seconds, speedup was:9.21583
+Block size for double precision row operations: 1024
+addColumnsFloatCpu took    :    9.34415 seconds, addColumnsFloatGpu took    :    0.0127877 seconds, speedup was:730.713
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.0544002 seconds, speedup was:0.000403206
+
+Block size for single precision column operations: 1024
+addRowsDoubleCpu took      :    0.514514 seconds, addRowsDoubleGpu took      :    0.0822107 seconds, speedup was:6.25848
+Block size for double precision column operations: 1024
+addColumnsDoubleCpu took   :    10.1624 seconds, addColumnsDoubleGpu took   :    0.0149088 seconds, speedup was:681.639
+addRowsVectorDoubleCpu took:    2.38419e-05 seconds, addRowsVectorDoubleGpu took:    0.0822107 seconds, speedup was:0.000290009
+ 
+========================== WITH REGISTERS ==========================
+ 
+>>> Launching Block Size: 4 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 4
+addRowsFloatCpu took       :    0.501467 seconds, addRowsFloatGpu took       :    0.022172 seconds, speedup was:22.6171
+Block size for double precision row operations: 4
+addColumnsFloatCpu took    :    9.72355 seconds, addColumnsFloatGpu took    :    0.0154569 seconds, speedup was:629.076
+addRowsVectorFloatCpu took :    2.21729e-05 seconds, addRowsVectorFloatGpu took :    0.022172 seconds, speedup was:0.00100004
+
+Block size for single precision column operations: 4
+addRowsDoubleCpu took      :    0.514131 seconds, addRowsDoubleGpu took      :    0.0335917 seconds, speedup was:15.3053
+Block size for double precision column operations: 4
+addColumnsDoubleCpu took   :    9.90758 seconds, addColumnsDoubleGpu took   :    0.0523451 seconds, speedup was:189.274
+addRowsVectorDoubleCpu took:    2.38419e-05 seconds, addRowsVectorDoubleGpu took:    0.0335917 seconds, speedup was:0.000709755
+ 
+>>> Launching Block Size: 8 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 8
+addRowsFloatCpu took       :    0.501331 seconds, addRowsFloatGpu took       :    0.0203428 seconds, speedup was:24.6441
+Block size for double precision row operations: 8
+addColumnsFloatCpu took    :    9.90063 seconds, addColumnsFloatGpu took    :    0.0169042 seconds, speedup was:585.691
+addRowsVectorFloatCpu took :    2.21729e-05 seconds, addRowsVectorFloatGpu took :    0.0203428 seconds, speedup was:0.00108996
+
+Block size for single precision column operations: 8
+addRowsDoubleCpu took      :    0.514338 seconds, addRowsDoubleGpu took      :    0.0248369 seconds, speedup was:20.7086
+Block size for double precision column operations: 8
+addColumnsDoubleCpu took   :    10.2175 seconds, addColumnsDoubleGpu took   :    0.0312895 seconds, speedup was:326.547
+addRowsVectorDoubleCpu took:    2.40803e-05 seconds, addRowsVectorDoubleGpu took:    0.0248369 seconds, speedup was:0.000969536
+ 
+>>> Launching Block Size: 16 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 16
+addRowsFloatCpu took       :    0.501315 seconds, addRowsFloatGpu took       :    0.0199854 seconds, speedup was:25.084
+Block size for double precision row operations: 16
+addColumnsFloatCpu took    :    9.18096 seconds, addColumnsFloatGpu took    :    0.0151613 seconds, speedup was:605.553
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.0199854 seconds, speedup was:0.00109753
+
+Block size for single precision column operations: 16
+addRowsDoubleCpu took      :    0.514572 seconds, addRowsDoubleGpu took      :    0.0317748 seconds, speedup was:16.1943
+Block size for double precision column operations: 16
+addColumnsDoubleCpu took   :    9.92937 seconds, addColumnsDoubleGpu took   :    0.0193802 seconds, speedup was:512.346
+addRowsVectorDoubleCpu took:    2.40803e-05 seconds, addRowsVectorDoubleGpu took:    0.0317748 seconds, speedup was:0.000757842
+ 
+>>> Launching Block Size: 32 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 32
+addRowsFloatCpu took       :    0.5014 seconds, addRowsFloatGpu took       :    0.0223758 seconds, speedup was:22.4081
+Block size for double precision row operations: 32
+addColumnsFloatCpu took    :    9.40065 seconds, addColumnsFloatGpu took    :    0.0104836 seconds, speedup was:896.697
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.0223758 seconds, speedup was:0.000980276
+
+Block size for single precision column operations: 32
+addRowsDoubleCpu took      :    0.514742 seconds, addRowsDoubleGpu took      :    0.0385558 seconds, speedup was:13.3506
+Block size for double precision column operations: 32
+addColumnsDoubleCpu took   :    10.3459 seconds, addColumnsDoubleGpu took   :    0.0143237 seconds, speedup was:722.291
+addRowsVectorDoubleCpu took:    2.47955e-05 seconds, addRowsVectorDoubleGpu took:    0.0385558 seconds, speedup was:0.000643107
+ 
+>>> Launching Block Size: 64 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 64
+addRowsFloatCpu took       :    0.501332 seconds, addRowsFloatGpu took       :    0.0221631 seconds, speedup was:22.6202
+Block size for double precision row operations: 64
+addColumnsFloatCpu took    :    10.7031 seconds, addColumnsFloatGpu took    :    0.0100403 seconds, speedup was:1066.02
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.0221631 seconds, speedup was:0.000989687
+
+Block size for single precision column operations: 64
+addRowsDoubleCpu took      :    0.514716 seconds, addRowsDoubleGpu took      :    0.0382653 seconds, speedup was:13.4512
+Block size for double precision column operations: 64
+addColumnsDoubleCpu took   :    10.5844 seconds, addColumnsDoubleGpu took   :    0.0139449 seconds, speedup was:759.016
+addRowsVectorDoubleCpu took:    2.40803e-05 seconds, addRowsVectorDoubleGpu took:    0.0382653 seconds, speedup was:0.000629298
+ 
+>>> Launching Block Size: 128 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 128
+addRowsFloatCpu took       :    0.501318 seconds, addRowsFloatGpu took       :    0.0229476 seconds, speedup was:21.8462
+Block size for double precision row operations: 128
+addColumnsFloatCpu took    :    9.19263 seconds, addColumnsFloatGpu took    :    0.00995597 seconds, speedup was:923.328
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.0229476 seconds, speedup was:0.000955851
+
+Block size for single precision column operations: 128
+addRowsDoubleCpu took      :    0.514985 seconds, addRowsDoubleGpu took      :    0.0396089 seconds, speedup was:13.0017
+Block size for double precision column operations: 128
+addColumnsDoubleCpu took   :    10.0518 seconds, addColumnsDoubleGpu took   :    0.0143786 seconds, speedup was:699.079
+addRowsVectorDoubleCpu took:    2.38419e-05 seconds, addRowsVectorDoubleGpu took:    0.0396089 seconds, speedup was:0.000601931
+ 
+>>> Launching Block Size: 256 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 256
+addRowsFloatCpu took       :    0.501677 seconds, addRowsFloatGpu took       :    0.0246958 seconds, speedup was:20.3142
+Block size for double precision row operations: 256
+addColumnsFloatCpu took    :    9.06017 seconds, addColumnsFloatGpu took    :    0.0100412 seconds, speedup was:902.304
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.0246958 seconds, speedup was:0.000888186
+
+Block size for single precision column operations: 256
+addRowsDoubleCpu took      :    0.514955 seconds, addRowsDoubleGpu took      :    0.0436725 seconds, speedup was:11.7913
+Block size for double precision column operations: 256
+addColumnsDoubleCpu took   :    10.1322 seconds, addColumnsDoubleGpu took   :    0.0151409 seconds, speedup was:669.192
+addRowsVectorDoubleCpu took:    2.40803e-05 seconds, addRowsVectorDoubleGpu took:    0.0436725 seconds, speedup was:0.000551383
+ 
+>>> Launching Block Size: 512 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 512
+addRowsFloatCpu took       :    0.501116 seconds, addRowsFloatGpu took       :    0.0292757 seconds, speedup was:17.1171
+Block size for double precision row operations: 512
+addColumnsFloatCpu took    :    9.74138 seconds, addColumnsFloatGpu took    :    0.0104736 seconds, speedup was:930.089
+addRowsVectorFloatCpu took :    2.21729e-05 seconds, addRowsVectorFloatGpu took :    0.0292757 seconds, speedup was:0.000757383
+
+Block size for single precision column operations: 512
+addRowsDoubleCpu took      :    0.514723 seconds, addRowsDoubleGpu took      :    0.0489106 seconds, speedup was:10.5237
+Block size for double precision column operations: 512
+addColumnsDoubleCpu took   :    10.1116 seconds, addColumnsDoubleGpu took   :    0.0165233 seconds, speedup was:611.962
+addRowsVectorDoubleCpu took:    2.47955e-05 seconds, addRowsVectorDoubleGpu took:    0.0489106 seconds, speedup was:0.000506956
+ 
+>>> Launching Block Size: 1024 <<<
+***************************************************
+Found 1 CUDA-enabled devices
+Choosing NVIDIA GeForce RTX 2080 SUPER
+***************************************************
+
+Block size for single precision row operations: 1024
+addRowsFloatCpu took       :    0.501248 seconds, addRowsFloatGpu took       :    0.0335071 seconds, speedup was:14.9595
+Block size for double precision row operations: 1024
+addColumnsFloatCpu took    :    9.40609 seconds, addColumnsFloatGpu took    :    0.00881261 seconds, speedup was:1067.34
+addRowsVectorFloatCpu took :    2.19345e-05 seconds, addRowsVectorFloatGpu took :    0.0335071 seconds, speedup was:0.000654623
+
+Block size for single precision column operations: 1024
+addRowsDoubleCpu took      :    0.514838 seconds, addRowsDoubleGpu took      :    0.049829 seconds, speedup was:10.3321
+Block size for double precision column operations: 1024
+addColumnsDoubleCpu took   :    9.88665 seconds, addColumnsDoubleGpu took   :    0.0124318 seconds, speedup was:795.27
+addRowsVectorDoubleCpu took:    2.38419e-05 seconds, addRowsVectorDoubleGpu took:    0.049829 seconds, speedup was:0.000478474
