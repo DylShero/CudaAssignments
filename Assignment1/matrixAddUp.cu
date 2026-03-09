@@ -238,7 +238,7 @@ extern int cudaMatrixAddUp (
 	}
 
 	// TODO: Allocate a vector of double precision values of size rows
-	float *rowsDouble_gpu;
+	double *rowsDouble_gpu;
 	err = cudaMalloc(&rowsDouble_gpu, sizeof(double) * rows);
 	if (cudaSuccess != err) {	// Check for error values
 		printf("(Cuda error %s): %s\n", "Allocating rowsDouble_gpu", cudaGetErrorString(err));
@@ -246,7 +246,7 @@ extern int cudaMatrixAddUp (
 	}
 
 	// TODO: Allocate a vector of double precision values of size columns
-	float *columnsDouble_gpu;
+	double *columnsDouble_gpu;
 	err = cudaMalloc(&columnsDouble_gpu, sizeof(double) * columns);
 	if (cudaSuccess != err) {	// Check for error values
 		printf("(Cuda error %s): %s\n", "Allocating columnsDouble_gpu", cudaGetErrorString(err));
@@ -254,7 +254,7 @@ extern int cudaMatrixAddUp (
 	}
 
 	// TODO: Allocate one double precision value for the reduced rowsDouble_gpu vector
-	float *totalRowsDouble_gpu;
+	double *totalRowsDouble_gpu;
 	err = cudaMalloc(&totalRowsDouble_gpu, sizeof(double));
 	if (cudaSuccess != err) {	// Check for error values
 		printf("(Cuda error %s): %s\n", "Allocating totalRowsDouble_gpu", cudaGetErrorString(err));
@@ -424,7 +424,9 @@ extern int cudaMatrixAddUp (
 	cudaEventRecord(computeHorizontallyDoubleGpuStart, 0); // We use 0 here because it is the "default" stream
 
 	// TODO: Call the kernel that adds together the absolute value of each element of each row of a double precision matrix into a double precision vector of size rows
+	addMatrixRowsDoublePrecision<<<dimGridDoubleRow, dimBlockDoubleRow>>>(matrixDouble_gpu, rowsDouble_gpu, rows, columns);
 	// TODO: Call the kernel that reduces the value of the vector of size rows into a single double precision value
+	reduceVectorDoublePrecision<<<1, 1>>>(rowsDouble_gpu, totalRowsDouble_gpu, rows);
 
 	// Cuda Timing
 	cudaEventRecord(computeHorizontallyDoubleGpuEnd, 0);
@@ -447,7 +449,9 @@ extern int cudaMatrixAddUp (
 	cudaEventRecord(computeVerticallyDoubleGpuStart, 0); // We use 0 here because it is the "default" stream
 
 	// TODO: Call the kernel that adds together the absolute value of each element of each column of a double precision matrix into a double precision vector of size columns
+	addMatrixColsDoublePrecision<<<dimGridDoubleCol, dimBlockDoubleCol>>>(matrixDouble_gpu, columnsDouble_gpu, rows, columns);
 	// TODO: Call the kernel that reduces the value of the vector of size columns into a single double precision value
+	reduceVectorDoublePrecision<<<1, 1>>>(columnsDouble_gpu, totalColumnsDouble_gpu, columns);
 
 	// Cuda Timing
 	cudaEventRecord(computeVerticallyDoubleGpuEnd, 0);
@@ -469,7 +473,18 @@ extern int cudaMatrixAddUp (
 	cudaEventRecord(transferBackFloatGpuStart, 0); // We use 0 here because it is the "default" stream
 
 	// TODO: Copy totalRowsFloat_gpu into totalRowsFloat
+	err = cudaMemcpy(&totalRowsFloat, totalRowsFloat_gpu, sizeof(float), cudaMemcpyDeviceToHost);
+    if (cudaSuccess != err) {
+        printf("(Cuda error %s): %s\n", "Error copying totalRowsFloat_gpu to host", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
 	// TODO: Copy totalColumnsFloat_gpu into totalColumnsFloat
+	err = cudaMemcpy(&totalColumnsFloat, totalColumnsFloat_gpu, sizeof(float), cudaMemcpyDeviceToHost);
+    if (cudaSuccess != err) {
+        printf("(Cuda error %s): %s\n", "Error copying totalColumnsFloat_gpu to host", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
 
 	// Cuda Timing
 	cudaEventRecord(transferBackFloatGpuEnd, 0);
@@ -490,7 +505,17 @@ extern int cudaMatrixAddUp (
 	cudaEventRecord(transferBackDoubleGpuStart, 0); // We use 0 here because it is the "default" stream
 
 	// TODO: Copy totalRowsDouble_gpu into totalRowsDouble
+	err = cudaMemcpy(&totalRowsDouble, totalRowsDouble_gpu, sizeof(double), cudaMemcpyDeviceToHost);
+    if (cudaSuccess != err) {
+        printf("(Cuda error %s): %s\n", "Error copying totalRowsDouble_gpu to host", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
 	// TODO: Copy totalColumnsDouble_gpu into totalColumnsDouble
+	err = cudaMemcpy(&totalColumnsDouble, totalColumnsDouble_gpu, sizeof(double), cudaMemcpyDeviceToHost);
+    if (cudaSuccess != err) {
+        printf("(Cuda error %s): %s\n", "Error copying totalColumnsDouble_gpu to host", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
 
 	// Cuda Timing
 	cudaEventRecord(transferBackDoubleGpuEnd, 0);
