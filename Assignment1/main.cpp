@@ -22,7 +22,7 @@ long int seed;
 unsigned int columns,rows,printPrecision;
 bool verbose,timing,cpu,gpu;
 
-extern inline int cudaMatrixAddUp (std::vector< float > &,std::vector< double > &, int,int,float&,float&,double &,double &,double &,double &,double &,double &, int &,int &,int &,int &,bool,unsigned int);
+extern inline int cudaMatrixAddUp (std::vector< float > &,std::vector< double > &, int,int,float&,float&,double &,double &,double &,double &,double &,double &,double &,double &,double &,double &, int &,int &,int &,int &,bool,unsigned int);
 //extern inline int add_vectors(void);
 extern inline int		chooseCudaCard			(bool verbose);
 
@@ -162,8 +162,11 @@ int main(int argc, char *argv[]) {
 	float totalAddedRowsFloatGpu,totalAddedColumnsFloatGpu;
 
 	double timeAddRowsFloatCpu,timeAddColumnsFloatCpu;
+	double timeReduceRowsFloatGpu, timeReduceColumnsFloatGpu;
+	double timeReduceRowsDoubleGpu, timeReduceColumnsDoubleGpu;
 	double timeAddRowsFloatGpu,timeAddColumnsFloatGpu;
 	double timeAddRowsVectorFloatCpu,timeAddColumnsVectorFloatCpu;
+
 
 	if (cpu) {
 		struct timeval addRowsCpuStart, addRowsCpuEnd;
@@ -251,7 +254,7 @@ int main(int argc, char *argv[]) {
 		cudaMatrixAddUp (	matrix1dFloat, matrix1dDouble,
 							rows,columns,
 							totalAddedRowsFloatGpu,totalAddedColumnsFloatGpu,totalAddedRowsDoubleGpu,totalAddedColumnsDoubleGpu,
-							timeAddRowsFloatGpu,timeAddColumnsFloatGpu,timeAddRowsDoubleGpu,timeAddColumnsDoubleGpu,
+							timeAddRowsFloatGpu,timeAddColumnsFloatGpu,timeReduceRowsFloatGpu, timeReduceColumnsFloatGpu,timeAddRowsDoubleGpu,timeAddColumnsDoubleGpu,timeReduceRowsDoubleGpu, timeReduceColumnsDoubleGpu,
 							blockSizeSinglePrecisionRow,blockSizeSinglePrecisionColumn,blockSizeDoublePrecisionRow,blockSizeDoublePrecisionColumn,
 							verbose,printPrecision);
 	}
@@ -295,7 +298,7 @@ int main(int argc, char *argv[]) {
 			cout << "addColumnsFloatCpu took    :    " << timeAddColumnsFloatCpu << " seconds, " <<
 					"addColumnsFloatGpu took    :    " << timeAddColumnsFloatGpu << " seconds, speedup was:" << timeAddColumnsFloatCpu/timeAddColumnsFloatGpu << endl;
 			cout << "addRowsVectorFloatCpu took :    " << timeAddRowsVectorFloatCpu << " seconds, " <<
-					"addRowsVectorFloatGpu took :    " << timeAddRowsFloatGpu << " seconds, speedup was:" << timeAddRowsVectorFloatCpu/timeAddRowsFloatGpu << endl;
+        			"addRowsVectorFloatGpu took :    " << timeReduceRowsFloatGpu << " seconds, speedup was:" << timeAddRowsVectorFloatCpu/timeReduceRowsFloatGpu << endl;
 			cout << endl;
 			cout << "Block size for single precision column operations: " << blockSizeDoublePrecisionRow << endl;
 			cout << "addRowsDoubleCpu took      :    " << timeAddRowsDoubleCpu << " seconds, " <<
@@ -304,7 +307,10 @@ int main(int argc, char *argv[]) {
 			cout << "addColumnsDoubleCpu took   :    " << timeAddColumnsDoubleCpu << " seconds, " <<
 					"addColumnsDoubleGpu took   :    " << timeAddColumnsDoubleGpu << " seconds, speedup was:" << timeAddColumnsDoubleCpu/timeAddColumnsDoubleGpu << endl;
 			cout << "addRowsVectorDoubleCpu took:    " << timeAddRowsVectorDoubleCpu << " seconds, " <<
-					"addRowsVectorDoubleGpu took:    " << timeAddRowsDoubleGpu << " seconds, speedup was:" << timeAddRowsVectorDoubleCpu/timeAddRowsDoubleGpu << endl;
+                    "addRowsVectorDoubleGpu took:    " << timeReduceRowsDoubleGpu << " seconds, speedup was:" << timeAddRowsVectorDoubleCpu/timeReduceRowsDoubleGpu << endl;
+            
+            cout << "addColumnsVectorDoubleCpu took: " << timeAddColumnsVectorDoubleCpu << " seconds, " <<
+                    "addColumnsVectorDoubleGpu took: " << timeReduceColumnsDoubleGpu << " seconds, speedup was:" << timeAddColumnsVectorDoubleCpu/timeReduceColumnsDoubleGpu << endl;
 		}
 	} else {
 		if (cpu) {

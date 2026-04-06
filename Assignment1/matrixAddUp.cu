@@ -29,40 +29,65 @@ void cudaLastErrorCheck (const char *message) {
 // TODO: Write a kernel that reduces a single precision vector in the global memory into a single value in the global memory performing the addition:
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
 __global__ void reduceVectorSinglePrecision(const float* inputVector, float* finalValue, int size) {
-    if (threadIdx.x == 0 && blockIdx.x == 0) {
-#ifdef WITH_REGISTERS
-        float sum = 0.0f;
-        for (int i = 0; i < size; i++) {
-            sum += inputVector[i];
+    extern __shared__ float sdataFloat[];
+    
+    unsigned int tid = threadIdx.x;
+    unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+    //Load data into shared memory (use 0.0f if out of bounds)
+    if (i < size) {
+    	sdataFloat[tid] = inputVector[i];
+	} else {
+    	sdataFloat[tid] = 0.0f;
+	}
+    __syncthreads();
+
+    //Perform parallel reduction in shared memory
+    for (unsigned int s = blockDim.x / 2; s > 0; s >>= 1) {
+        if (tid < s) {
+            sdataFloat[tid] += sdataFloat[tid + s];
         }
-        finalValue[0] = sum;
-#else
-        finalValue[0] = 0.0f;
-        for (int i = 0; i < size; i++) {
-            finalValue[0] += inputVector[i];
-        }
-#endif
+        __syncthreads();
+    }
+
+    //Thread 0 of each block adds its sum to the final global value
+    if (tid == 0) {
+        atomicAdd(finalValue, sdataFloat[0]);
     }
 }
 
 // TODO: Write a kernel that adds together the absolute value of each element of each row of a single precision matrix into a single precision vector of size n performing the addition:
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
 __global__ void addMatrixRowsSinglePrecision(const float* matrix, float* outVector, int rows, int columns) {
-    int rowIdx = blockIdx.x * blockDim.x + threadIdx.x;
+    extern __shared__ float sdataFloatRow[];
+    
+    int rowIdx = blockIdx.x; //Each block is assigned one row
+    int tid = threadIdx.x;
 
     if (rowIdx < rows) {
-#ifdef WITH_REGISTERS
         float sum = 0.0f;
-        for (int colIdx = 0; colIdx < columns; colIdx++) {
-            sum += fabsf(matrix[rowIdx * columns + colIdx]); 
+        
+        //Grid-stride loop to handle matrices with more columns than threads per block
+        for (int colIdx = tid; colIdx < columns; colIdx += blockDim.x) {
+            sum += fabsf(matrix[rowIdx * columns + colIdx]);
         }
-        outVector[rowIdx] = sum;
-#else
-        outVector[rowIdx] = 0.0f;
-        for (int colIdx = 0; colIdx < columns; colIdx++) {
-            outVector[rowIdx] += fabsf(matrix[rowIdx * columns + colIdx]);
+        
+        //Store thread's partial sum into shared memory
+        sdataFloatRow[tid] = sum;
+        __syncthreads();
+
+        //Perform parallel reduction in shared memory
+        for (unsigned int s = blockDim.x / 2; s > 0; s >>= 1) {
+            if (tid < s) {
+                sdataFloatRow[tid] += sdataFloatRow[tid + s];
+            }
+            __syncthreads();
         }
-#endif
+
+        //Thread 0 writes the reduced row sum to the output vector
+        if (tid == 0) {
+            outVector[rowIdx] = sdataFloatRow[0];
+        }
     }
 }
 // TODO: Write a kernel that adds together the absolute value of each element of each column of a single precision matrix into a single precision vector of size m performing the addition in the registers
@@ -91,40 +116,61 @@ __global__ void addMatrixColsSinglePrecision(const float* matrix, float* outVect
 // TODO: Write a kernel that reduces a double precision vector in the global memory into a double value in the global memory performing the addition:
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
 __global__ void reduceVectorDoublePrecision(const double* inputVector, double* finalValue, int size) {
-    if (threadIdx.x == 0 && blockIdx.x == 0) {
-#ifdef WITH_REGISTERS
-        double sum = 0.0;
-        for (int i = 0; i < size; i++) {
-            sum += inputVector[i];
+    extern __shared__ double sdataDouble[];
+    
+    unsigned int tid = threadIdx.x;
+    unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+    //Load data into shared memory (use 0.0 if out of bounds)
+    sdataDouble[tid] = (i < size) ? inputVector[i] : 0.0;
+    __syncthreads();
+
+    //Perform parallel reduction in shared memory
+    for (unsigned int s = blockDim.x / 2; s > 0; s >>= 1) {
+        if (tid < s) {
+            sdataDouble[tid] += sdataDouble[tid + s];
         }
-        finalValue[0] = sum;
-#else
-        finalValue[0] = 0.0;
-        for (int i = 0; i < size; i++) {
-            finalValue[0] += inputVector[i];
-        }
-#endif
+        __syncthreads();
+    }
+
+    //Thread 0 of each block adds its sum to the final global value
+    if (tid == 0) {
+        atomicAdd(finalValue, sdataDouble[0]);
     }
 }
 
 // TODO: Write a kernel that adds together the absolute value of each element of each row of a double precision matrix into a double precision vector of size n performing the addition:
 // TODO: in the registers if the compiler passes the flag -DWITH_REGISTERS or in the global memory if not
 __global__ void addMatrixRowsDoublePrecision(const double* matrix, double* outVector, int rows, int columns) {
-    int rowIdx = blockIdx.x * blockDim.x + threadIdx.x;
+    extern __shared__ double sdataDoubleRow[];
+    
+    int rowIdx = blockIdx.x; //Each block is assigned exactly one row
+    int tid = threadIdx.x;
 
     if (rowIdx < rows) {
-#ifdef WITH_REGISTERS
         double sum = 0.0;
-        for (int colIdx = 0; colIdx < columns; colIdx++) {
-            sum += fabs(matrix[rowIdx * columns + colIdx]); 
+        
+        //Grid-stride loop to handle matrices with more columns than threads per block
+        for (int colIdx = tid; colIdx < columns; colIdx += blockDim.x) {
+            sum += fabs(matrix[rowIdx * columns + colIdx]);
         }
-        outVector[rowIdx] = sum;
-#else
-        outVector[rowIdx] = 0.0;
-        for (int colIdx = 0; colIdx < columns; colIdx++) {
-            outVector[rowIdx] += fabs(matrix[rowIdx * columns + colIdx]);
+        
+        //Store thread's partial sum into shared memory
+        sdataDoubleRow[tid] = sum;
+        __syncthreads();
+
+        //Perform parallel reduction in shared memory
+        for (unsigned int s = blockDim.x / 2; s > 0; s >>= 1) {
+            if (tid < s) {
+                sdataDoubleRow[tid] += sdataDoubleRow[tid + s];
+            }
+            __syncthreads();
         }
-#endif
+
+        //Thread 0 writes the reduced row sum to the output vector
+        if (tid == 0) {
+            outVector[rowIdx] = sdataDoubleRow[0];
+        }
     }
 }
 
@@ -157,7 +203,9 @@ extern int cudaMatrixAddUp (
 	float &totalRowsFloat,			float &totalColumnsFloat,
 	double &totalRowsDouble,		double &totalColumnsDouble,
 	double &timeAddRowsFloatGpu,	double &timeAddColumnsFloatGpu,
+	double &timeReduceRowsFloatGpu, double &timeReduceColumnsFloatGpu,
 	double &timeAddRowsDoubleGpu,	double &timeAddColumnsDoubleGpu,
+	double &timeReduceRowsDoubleGpu,double &timeReduceColumnsDoubleGpu,
 	int &blockSizeSinglePrecisionRow,int &blockSizeSinglePrecisionColumn,int &blockSizeDoublePrecisionRow,int &blockSizeDoublePrecisionColumn,
 	bool verbose,unsigned int printPrecision) {
 
@@ -360,108 +408,176 @@ extern int cudaMatrixAddUp (
 	// ************************ 
 	// Add row wise:
 
-	// Cuda Timing
-	cudaEvent_t computeHorizontallyFloatGpuStart, computeHorizontallyFloatGpuEnd;
-	float computeHorizontallyFloatGpuElapsedTime,computeHorizontallyFloatGpuTime;
-	cudaEventCreate(&computeHorizontallyFloatGpuStart);
-	cudaEventCreate(&computeHorizontallyFloatGpuEnd);
-	cudaEventRecord(computeHorizontallyFloatGpuStart, 0); // We use 0 here because it is the "default" stream
+	// --- Time the Add Kernel ---
+    cudaEvent_t addRowsFloatGpuStart, addRowsFloatGpuEnd;
+    cudaEventCreate(&addRowsFloatGpuStart);
+    cudaEventCreate(&addRowsFloatGpuEnd);
+    cudaEventRecord(addRowsFloatGpuStart, 0);
+
+    // Call the kernel that adds the rows
+    addMatrixRowsSinglePrecision<<<rows, dimBlockSingleRow, dimBlockSingleRow.x * sizeof(float)>>>(matrixFloat_gpu, rowsFloat_gpu, rows, columns);
+
+    cudaEventRecord(addRowsFloatGpuEnd, 0);
+    cudaEventSynchronize(addRowsFloatGpuEnd);
+    
+    float addRowsFloatGpuElapsedTime;
+    cudaEventElapsedTime(&addRowsFloatGpuElapsedTime, addRowsFloatGpuStart, addRowsFloatGpuEnd);
+    timeAddRowsFloatGpu = addRowsFloatGpuElapsedTime * 0.001;
+    if (verbose) cout << "Add Matrix Rows Float Gpu Time: " << timeAddRowsFloatGpu << endl;
 
 
-	// TODO: Call the kernel that adds together the absolute value of each element of each row of a single precision matrix into a single precision vector of size rows
-	addMatrixRowsSinglePrecision<<<dimGridSingleRow, dimBlockSingleRow>>>(matrixFloat_gpu, rowsFloat_gpu, rows, columns);
-	// TODO: Call the kernel that reduces the value of the vector of size rows into a single single precision value
-	reduceVectorSinglePrecision<<<1, 1>>>(rowsFloat_gpu, totalRowsFloat_gpu, rows);// 1,1 to use only one thread.
+    // --- Time the Reduce Kernel ---
+    cudaEvent_t reduceRowsFloatGpuStart, reduceRowsFloatGpuEnd;
+    cudaEventCreate(&reduceRowsFloatGpuStart);
+    cudaEventCreate(&reduceRowsFloatGpuEnd);
+    cudaEventRecord(reduceRowsFloatGpuStart, 0);
 
+    // Set the target value to 0 before accumulating
+    cudaMemset(totalRowsFloat_gpu, 0, sizeof(float));
+    // Calculate grid size for the 1D vector reduction
+    int reduceGridSize = (rows + dimBlockSingleRow.x - 1) / dimBlockSingleRow.x;
+    
+    // Call the kernel that reduces the vector
+    reduceVectorSinglePrecision<<<reduceGridSize, dimBlockSingleRow, dimBlockSingleRow.x * sizeof(float)>>>(rowsFloat_gpu, totalRowsFloat_gpu, rows);
 
-	// Cuda Timing
-	cudaEventRecord(computeHorizontallyFloatGpuEnd, 0);
-	cudaEventSynchronize(computeHorizontallyFloatGpuStart);  // This is optional, we shouldn't need it
-	cudaEventSynchronize(computeHorizontallyFloatGpuEnd); // This isn't - we need to wait for the event to finish
-	cudaEventElapsedTime(&computeHorizontallyFloatGpuElapsedTime, computeHorizontallyFloatGpuStart, computeHorizontallyFloatGpuEnd);
-	computeHorizontallyFloatGpuTime=(float)(computeHorizontallyFloatGpuElapsedTime)*0.001;
-	cudaLastErrorCheck("computeHorizontallyFloat_rows_kernel");
-	if (verbose) cout << "computeHorizontallyFloatGpuTime: " << computeHorizontallyFloatGpuTime << endl;
-	//cout << "===>timeAddRowsFloatGpu: " << timeAddRowsFloatGpu << endl;
-	timeAddRowsFloatGpu=computeHorizontallyFloatGpuElapsedTime*0.001;
+    cudaEventRecord(reduceRowsFloatGpuEnd, 0);
+    cudaEventSynchronize(reduceRowsFloatGpuEnd);
+    
+    float reduceRowsFloatGpuElapsedTime;
+    cudaEventElapsedTime(&reduceRowsFloatGpuElapsedTime, reduceRowsFloatGpuStart, reduceRowsFloatGpuEnd);
+    timeReduceRowsFloatGpu = reduceRowsFloatGpuElapsedTime * 0.001;
+    if (verbose) cout << "Reduce Vector Float Gpu Time: " << timeReduceRowsFloatGpu << endl;
 
 	// ************************ 
 	// Add column wise:
 
-	// Cuda Timing
-	cudaEvent_t computeVerticallyFloatGpuStart, computeVerticallyFloatGpuEnd;
-	float computeVerticallyFloatGpuElapsedTime,computeVerticallyFloatGpuTime;
-	cudaEventCreate(&computeVerticallyFloatGpuStart);
-	cudaEventCreate(&computeVerticallyFloatGpuEnd);
-	cudaEventRecord(computeVerticallyFloatGpuStart, 0); // We use 0 here because it is the "default" stream
+	// --- Time the Add Kernel ---
+    cudaEvent_t addColsFloatGpuStart, addColsFloatGpuEnd;
+    cudaEventCreate(&addColsFloatGpuStart);
+    cudaEventCreate(&addColsFloatGpuEnd);
+    cudaEventRecord(addColsFloatGpuStart, 0);
+
+    // Call the kernel that adds the columns
+    addMatrixColsSinglePrecision<<<dimGridSingleCol, dimBlockSingleCol>>>(matrixFloat_gpu, columnsFloat_gpu, rows, columns);
+
+    cudaEventRecord(addColsFloatGpuEnd, 0);
+    cudaEventSynchronize(addColsFloatGpuEnd);
+    
+    float addColsFloatGpuElapsedTime;
+    cudaEventElapsedTime(&addColsFloatGpuElapsedTime, addColsFloatGpuStart, addColsFloatGpuEnd);
+    timeAddColumnsFloatGpu = addColsFloatGpuElapsedTime * 0.001;
+    if (verbose) cout << "Add Matrix Cols Float Gpu Time: " << timeAddColumnsFloatGpu << endl;
 
 
-	// TODO: Call the kernel that adds together the absolute value of each element of each column of a single precision matrix into a single precision vector of size columns
-	addMatrixColsSinglePrecision<<<dimGridSingleCol, dimBlockSingleCol>>>(matrixFloat_gpu, columnsFloat_gpu, rows, columns);
-	// TODO: Call the kernel that reduces the value of the vector of size columns into a single single precision value
-	reduceVectorSinglePrecision<<<1, 1>>>(columnsFloat_gpu, totalColumnsFloat_gpu, columns);
+    // --- Time the Reduce Kernel ---
+    cudaEvent_t reduceColsFloatGpuStart, reduceColsFloatGpuEnd;
+    cudaEventCreate(&reduceColsFloatGpuStart);
+    cudaEventCreate(&reduceColsFloatGpuEnd);
+    cudaEventRecord(reduceColsFloatGpuStart, 0);
 
+    // Set the target value to 0 before accumulating
+    cudaMemset(totalColumnsFloat_gpu, 0, sizeof(float));
+    // Calculate grid size for the 1D vector reduction (using columns instead of rows)
+    int reduceGridSizeCol = (columns + dimBlockSingleCol.x - 1) / dimBlockSingleCol.x;
+    
+    // Call the kernel that reduces the vector
+    reduceVectorSinglePrecision<<<reduceGridSizeCol, dimBlockSingleCol, dimBlockSingleCol.x * sizeof(float)>>>(columnsFloat_gpu, totalColumnsFloat_gpu, columns);
 
-	// CPU timing
-	cudaEventRecord(computeVerticallyFloatGpuEnd, 0);
-	cudaEventSynchronize(computeVerticallyFloatGpuStart);  // This is optional, we shouldn't need it
-	cudaEventSynchronize(computeVerticallyFloatGpuEnd); // This isn't - we need to wait for the event to finish
-	cudaEventElapsedTime(&computeVerticallyFloatGpuElapsedTime, computeVerticallyFloatGpuStart, computeVerticallyFloatGpuEnd);
-	computeVerticallyFloatGpuTime=(float)(computeVerticallyFloatGpuElapsedTime)*0.001;
-	cudaLastErrorCheck("computeVerticallyFloat_rows_kernel");
-	if (verbose) cout << "computeVerticallyFloatGpuTime: " << computeVerticallyFloatGpuTime << endl;
-	timeAddColumnsFloatGpu=computeVerticallyFloatGpuElapsedTime*0.001;
+    cudaEventRecord(reduceColsFloatGpuEnd, 0);
+    cudaEventSynchronize(reduceColsFloatGpuEnd);
+    
+    float reduceColsFloatGpuElapsedTime;
+    cudaEventElapsedTime(&reduceColsFloatGpuElapsedTime, reduceColsFloatGpuStart, reduceColsFloatGpuEnd);
+    timeReduceColumnsFloatGpu = reduceColsFloatGpuElapsedTime * 0.001;
+    if (verbose) cout << "Reduce Vector Cols Float Gpu Time: " << timeReduceColumnsFloatGpu << endl;
 
 	// ************************ Double compute ************************
 	// ************************ 
 	// Add row wise:
 
 	// Cuda Timing
-	cudaEvent_t computeHorizontallyDoubleGpuStart, computeHorizontallyDoubleGpuEnd;
-	float computeHorizontallyDoubleGpuElapsedTime,computeHorizontallyDoubleGpuTime;
-	cudaEventCreate(&computeHorizontallyDoubleGpuStart);
-	cudaEventCreate(&computeHorizontallyDoubleGpuEnd);
-	cudaEventRecord(computeHorizontallyDoubleGpuStart, 0); // We use 0 here because it is the "default" stream
+	// --- Time the Add Kernel ---
+    cudaEvent_t addRowsDoubleGpuStart, addRowsDoubleGpuEnd;
+    cudaEventCreate(&addRowsDoubleGpuStart);
+    cudaEventCreate(&addRowsDoubleGpuEnd);
+    cudaEventRecord(addRowsDoubleGpuStart, 0);
 
-	// TODO: Call the kernel that adds together the absolute value of each element of each row of a double precision matrix into a double precision vector of size rows
-	addMatrixRowsDoublePrecision<<<dimGridDoubleRow, dimBlockDoubleRow>>>(matrixDouble_gpu, rowsDouble_gpu, rows, columns);
-	// TODO: Call the kernel that reduces the value of the vector of size rows into a single double precision value
-	reduceVectorDoublePrecision<<<1, 1>>>(rowsDouble_gpu, totalRowsDouble_gpu, rows);
+    // Call the kernel that adds the rows
+    addMatrixRowsDoublePrecision<<<rows, dimBlockDoubleRow, dimBlockDoubleRow.x * sizeof(double)>>>(matrixDouble_gpu, rowsDouble_gpu, rows, columns);
 
-	// Cuda Timing
-	cudaEventRecord(computeHorizontallyDoubleGpuEnd, 0);
-	cudaEventSynchronize(computeHorizontallyDoubleGpuStart);  // This is optional, we shouldn't need it
-	cudaEventSynchronize(computeHorizontallyDoubleGpuEnd); // This isn't - we need to wait for the event to finish
-	cudaEventElapsedTime(&computeHorizontallyDoubleGpuElapsedTime, computeHorizontallyDoubleGpuStart, computeHorizontallyDoubleGpuEnd);
-	computeHorizontallyDoubleGpuTime=(float)(computeHorizontallyDoubleGpuElapsedTime)*0.001;
-	cudaLastErrorCheck("computeHorizontallyDouble_rows_kernel");
-	if (verbose) cout << "computeHorizontallyDoubleGpuTime: " << computeHorizontallyDoubleGpuTime << endl;
-	timeAddRowsDoubleGpu=computeHorizontallyDoubleGpuElapsedTime*0.001;
+    cudaEventRecord(addRowsDoubleGpuEnd, 0);
+    cudaEventSynchronize(addRowsDoubleGpuEnd);
+    
+    float addRowsDoubleGpuElapsedTime;
+    cudaEventElapsedTime(&addRowsDoubleGpuElapsedTime, addRowsDoubleGpuStart, addRowsDoubleGpuEnd);
+    timeAddRowsDoubleGpu = addRowsDoubleGpuElapsedTime * 0.001;
+    if (verbose) cout << "Add Matrix Rows Double Gpu Time: " << timeAddRowsDoubleGpu << endl;
+
+
+    // --- Time the Reduce Kernel ---
+    cudaEvent_t reduceRowsDoubleGpuStart, reduceRowsDoubleGpuEnd;
+    cudaEventCreate(&reduceRowsDoubleGpuStart);
+    cudaEventCreate(&reduceRowsDoubleGpuEnd);
+    cudaEventRecord(reduceRowsDoubleGpuStart, 0);
+
+    // Set the target value to 0 before accumulating
+    cudaMemset(totalRowsDouble_gpu, 0, sizeof(double));
+    // Calculate grid size for the 1D vector reduction
+    int reduceGridSizeDoubleRow = (rows + dimBlockDoubleRow.x - 1) / dimBlockDoubleRow.x;
+    
+    // Call the kernel that reduces the vector
+    reduceVectorDoublePrecision<<<reduceGridSizeDoubleRow, dimBlockDoubleRow, dimBlockDoubleRow.x * sizeof(double)>>>(rowsDouble_gpu, totalRowsDouble_gpu, rows);
+
+    cudaEventRecord(reduceRowsDoubleGpuEnd, 0);
+    cudaEventSynchronize(reduceRowsDoubleGpuEnd);
+    
+    float reduceRowsDoubleGpuElapsedTime;
+    cudaEventElapsedTime(&reduceRowsDoubleGpuElapsedTime, reduceRowsDoubleGpuStart, reduceRowsDoubleGpuEnd);
+    timeReduceRowsDoubleGpu = reduceRowsDoubleGpuElapsedTime * 0.001;
+    if (verbose) cout << "Reduce Vector Rows Double Gpu Time: " << timeReduceRowsDoubleGpu << endl;
 
 	// ************************ 
 	// Add vertically:
 
-	// Cuda Timing
-	cudaEvent_t computeVerticallyDoubleGpuStart, computeVerticallyDoubleGpuEnd;
-	float computeVerticallyDoubleGpuElapsedTime,computeVerticallyDoubleGpuTime;
-	cudaEventCreate(&computeVerticallyDoubleGpuStart);
-	cudaEventCreate(&computeVerticallyDoubleGpuEnd);
-	cudaEventRecord(computeVerticallyDoubleGpuStart, 0); // We use 0 here because it is the "default" stream
+	// --- Time the Add Kernel ---
+    cudaEvent_t addColsDoubleGpuStart, addColsDoubleGpuEnd;
+    cudaEventCreate(&addColsDoubleGpuStart);
+    cudaEventCreate(&addColsDoubleGpuEnd);
+    cudaEventRecord(addColsDoubleGpuStart, 0);
 
-	// TODO: Call the kernel that adds together the absolute value of each element of each column of a double precision matrix into a double precision vector of size columns
-	addMatrixColsDoublePrecision<<<dimGridDoubleCol, dimBlockDoubleCol>>>(matrixDouble_gpu, columnsDouble_gpu, rows, columns);
-	// TODO: Call the kernel that reduces the value of the vector of size columns into a single double precision value
-	reduceVectorDoublePrecision<<<1, 1>>>(columnsDouble_gpu, totalColumnsDouble_gpu, columns);
+    // Call the kernel that adds the columns
+    addMatrixColsDoublePrecision<<<dimGridDoubleCol, dimBlockDoubleCol>>>(matrixDouble_gpu, columnsDouble_gpu, rows, columns);
 
-	// Cuda Timing
-	cudaEventRecord(computeVerticallyDoubleGpuEnd, 0);
-	cudaEventSynchronize(computeVerticallyDoubleGpuStart);  // This is optional, we shouldn't need it
-	cudaEventSynchronize(computeVerticallyDoubleGpuEnd); // This isn't - we need to wait for the event to finish
-	cudaEventElapsedTime(&computeVerticallyDoubleGpuElapsedTime, computeVerticallyDoubleGpuStart, computeVerticallyDoubleGpuEnd);
-	computeVerticallyDoubleGpuTime=(float)(computeVerticallyDoubleGpuElapsedTime)*0.001;
-	cudaLastErrorCheck("computeVerticallyDouble_rows_kernel");
-	if (verbose) cout << "computeVerticallyDoubleGpuTime: " << computeVerticallyDoubleGpuTime << endl;
-	timeAddColumnsDoubleGpu=computeVerticallyDoubleGpuElapsedTime*0.001;
+    cudaEventRecord(addColsDoubleGpuEnd, 0);
+    cudaEventSynchronize(addColsDoubleGpuEnd);
+    
+    float addColsDoubleGpuElapsedTime;
+    cudaEventElapsedTime(&addColsDoubleGpuElapsedTime, addColsDoubleGpuStart, addColsDoubleGpuEnd);
+    timeAddColumnsDoubleGpu = addColsDoubleGpuElapsedTime * 0.001;
+    if (verbose) cout << "Add Matrix Cols Double Gpu Time: " << timeAddColumnsDoubleGpu << endl;
+
+
+    // --- Time the Reduce Kernel ---
+    cudaEvent_t reduceColsDoubleGpuStart, reduceColsDoubleGpuEnd;
+    cudaEventCreate(&reduceColsDoubleGpuStart);
+    cudaEventCreate(&reduceColsDoubleGpuEnd);
+    cudaEventRecord(reduceColsDoubleGpuStart, 0);
+
+    // Set the target value to 0 before accumulating
+    cudaMemset(totalColumnsDouble_gpu, 0, sizeof(double));
+    // Calculate grid size for the 1D vector reduction
+    int reduceGridSizeDoubleCol = (columns + dimBlockDoubleCol.x - 1) / dimBlockDoubleCol.x;
+    
+    // Call the kernel that reduces the vector
+    reduceVectorDoublePrecision<<<reduceGridSizeDoubleCol, dimBlockDoubleCol, dimBlockDoubleCol.x * sizeof(double)>>>(columnsDouble_gpu, totalColumnsDouble_gpu, columns);
+
+    cudaEventRecord(reduceColsDoubleGpuEnd, 0);
+    cudaEventSynchronize(reduceColsDoubleGpuEnd);
+    
+    float reduceColsDoubleGpuElapsedTime;
+    cudaEventElapsedTime(&reduceColsDoubleGpuElapsedTime, reduceColsDoubleGpuStart, reduceColsDoubleGpuEnd);
+    timeReduceColumnsDoubleGpu = reduceColsDoubleGpuElapsedTime * 0.001;
+    if (verbose) cout << "Reduce Vector Cols Double Gpu Time: " << timeReduceColumnsDoubleGpu << endl;
 
 	// ************************ Single precision transfer back to host ************************
 
