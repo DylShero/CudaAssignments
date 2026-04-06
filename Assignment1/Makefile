@@ -105,22 +105,15 @@ test-efence: all
 
 benchmark: all
 	@echo " "
-	@echo "Running Full Benchmark  (All Sizes & Block Sizes)"
+	@echo "Running Full Benchmark (All Sizes & Block Sizes) and saving to benchmark_results.txt"
 	@for size in 1000 5000 10000 25000 ; do \
-		echo " "; \
-		echo "*** TESTING MATRIX SIZE: $$size x $$size ***"; \
-		echo "========================== WITHOUT REGISTERS =========================="; \
-		for blockSize in 4 8 16 32 64 128 256 512 1024 ; do \
-			echo " "; \
-			echo ">>> Launching Block Size: $$blockSize <<<"; \
-			./$(TARGET_NOREGS) -n $$size -m $$size -t -x $$blockSize -X $$blockSize -y $$blockSize -Y $$blockSize; \
-		done; \
-		echo " "; \
-		echo "========================== WITH REGISTERS =========================="; \
-		for blockSize in 4 8 16 32 64 128 256 512 1024 ; do \
-			echo " "; \
-			echo ">>> Launching Block Size: $$blockSize <<<"; \
-			./$(TARGET_REGS) -n $$size -m $$size -t -x $$blockSize -X $$blockSize -y $$blockSize -Y $$blockSize; \
+		echo " " | tee -a benchmark_results.txt; \
+		echo "*** TESTING MATRIX SIZE: $$size x $$size ***" | tee -a benchmark_results.txt; \
+		echo "========================== SHARED MEMORY KERNELS ==========================" | tee -a benchmark_results.txt; \
+		for blockSize in 32 64 128 256 512 1024 ; do \
+			echo " " | tee -a benchmark_results.txt; \
+			echo ">>> Launching Block Size: $$blockSize <<<" | tee -a benchmark_results.txt; \
+			./$(TARGET_NOREGS) -n $$size -m $$size -t -x $$blockSize -X $$blockSize -y $$blockSize -Y $$blockSize | tee -a benchmark_results.txt; \
 		done; \
 	done
 
