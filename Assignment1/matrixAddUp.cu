@@ -207,172 +207,40 @@ extern int cudaMatrixAddUp (
 	double &timeAddRowsDoubleGpu,	double &timeAddColumnsDoubleGpu,
 	double &timeReduceRowsDoubleGpu,double &timeReduceColumnsDoubleGpu,
 	int &blockSizeSinglePrecisionRow,int &blockSizeSinglePrecisionColumn,int &blockSizeDoublePrecisionRow,int &blockSizeDoublePrecisionColumn,
-	bool verbose,unsigned int printPrecision) {
+	bool verbose,unsigned int printPrecision, int numberOfStreams) {
 
 	cudaError_t err;
-	// Allocate the variables in the global memory
+	//Allocate the variables in the global memory
 
-	// ************************ Single Precision allocation ************************
-	// Cuda Timing
-	cudaEvent_t allocateFloatGpuStart, allocateFloatGpuEnd;
-	float allocateFloatGpuElapsedTime,allocateFloatGpuTime;
-	cudaEventCreate(&allocateFloatGpuStart);
-	cudaEventCreate(&allocateFloatGpuEnd);
-	cudaEventRecord(allocateFloatGpuStart, 0); // We use 0 here because it is the "default" stream
+	cudaHostRegister(matrixFloat1d.data(), matrixFloat1d.size() * sizeof(float), cudaHostRegisterDefault);
+    cudaHostRegister(matrixDouble1d.data(), matrixDouble1d.size() * sizeof(double), cudaHostRegisterDefault);
 
-	// TODO: Allocate a matrix of single precision values of size rows*columns
-	float *matrixFloat_gpu;
-	err = cudaMalloc(&matrixFloat_gpu, sizeof(float) * (rows * columns));
-	if (cudaSuccess != err) {	// Check for error values
-		printf("(Cuda error %s): %s\n", "Allocating matrixFloat_gpu", cudaGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
-	// 
+	//Create streams
+	cudaStream_t* streamsFloat = new cudaStream_t[numberOfStreams];
+    cudaStream_t* streamsDouble = new cudaStream_t[numberOfStreams];
+    for (int i = 0; i < numberOfStreams; ++i) {
+        cudaStreamCreate(&streamsFloat[i]);
+        cudaStreamCreate(&streamsDouble[i]);
+    }
 
-	// TODO: Allocate a vector of single precision values of size rows
-	float *rowsFloat_gpu;
-	err = cudaMalloc(&rowsFloat_gpu, sizeof(float) * rows);
-	if (cudaSuccess != err) {	// Check for error values
-		printf("(Cuda error %s): %s\n", "Allocating rowsFloat_gpu", cudaGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
+
+	float *matrixFloat_gpu, *rowsFloat_gpu, *columnsFloat_gpu, *totalRowsFloat_gpu, *totalColumnsFloat_gpu;
+    cudaMalloc(&matrixFloat_gpu, sizeof(float) * (rows * columns));
+    cudaMalloc(&rowsFloat_gpu, sizeof(float) * rows);
+    cudaMalloc(&columnsFloat_gpu, sizeof(float) * columns);
+    cudaMalloc(&totalRowsFloat_gpu, sizeof(float));
+    cudaMalloc(&totalColumnsFloat_gpu, sizeof(float));
+
+    double *matrixDouble_gpu, *rowsDouble_gpu, *columnsDouble_gpu, *totalRowsDouble_gpu, *totalColumnsDouble_gpu;
+    cudaMalloc(&matrixDouble_gpu, sizeof(double) * (rows * columns));
+    cudaMalloc(&rowsDouble_gpu, sizeof(double) * rows);
+    cudaMalloc(&columnsDouble_gpu, sizeof(double) * columns);
+    cudaMalloc(&totalRowsDouble_gpu, sizeof(double));
+    cudaMalloc(&totalColumnsDouble_gpu, sizeof(double));
+
+
+
 	
-
-	// TODO: Allocate a vector of single precision values of size columns
-	float *columnsFloat_gpu;
-	err = cudaMalloc(&columnsFloat_gpu, sizeof(float) * columns);
-	if (cudaSuccess != err) {	// Check for error values
-		printf("(Cuda error %s): %s\n", "Allocating columnsFloat_gpu", cudaGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
-
-	// TODO: Allocate one single precision value for the reduced rowsFloat_gpu vector
-	float *totalRowsFloat_gpu;
-	err = cudaMalloc(&totalRowsFloat_gpu, sizeof(float));
-	if (cudaSuccess != err) {	// Check for error values
-		printf("(Cuda error %s): %s\n", "Allocating totalRowsFloat_gpu", cudaGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
-
-	// TODO: Allocate one single precision value for the reduced columnsFloat_gpu vector
-	float *totalColumnsFloat_gpu;
-	err = cudaMalloc(&totalColumnsFloat_gpu, sizeof(float));
-
-
-	// Cuda Timing
-	cudaEventRecord(allocateFloatGpuEnd, 0);
-	cudaEventSynchronize(allocateFloatGpuStart);  // This is optional, we shouldn't need it
-	cudaEventSynchronize(allocateFloatGpuEnd); // This isn't - we need to wait for the event to finish
-	cudaEventElapsedTime(&allocateFloatGpuElapsedTime, allocateFloatGpuStart, allocateFloatGpuEnd);
-	allocateFloatGpuTime=(double)(allocateFloatGpuElapsedTime)*0.001;
-	cudaLastErrorCheck("allocateFloat");
-
-	if (verbose) cout << "allocateFloatGpuTime: " << allocateFloatGpuTime << endl;
-
-	// ************************ Double precision allocation ************************
-	// Cuda Timing
-	cudaEvent_t allocateDoubleGpuStart, allocateDoubleGpuEnd;
-	float allocateDoubleGpuElapsedTime,allocateDoubleGpuTime;
-	cudaEventCreate(&allocateDoubleGpuStart);
-	cudaEventCreate(&allocateDoubleGpuEnd);
-	cudaEventRecord(allocateDoubleGpuStart, 0); // We use 0 here because it is the "default" stream
-
-	// TODO: Allocate a matrix of double precision values of size rows*columns
-	double *matrixDouble_gpu;
-	err = cudaMalloc(&matrixDouble_gpu, sizeof(double) * (rows * columns));
-	if (cudaSuccess != err) {	// Check for error values
-		printf("(Cuda error %s): %s\n", "Allocating matrixDouble_gpu", cudaGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
-
-	// TODO: Allocate a vector of double precision values of size rows
-	double *rowsDouble_gpu;
-	err = cudaMalloc(&rowsDouble_gpu, sizeof(double) * rows);
-	if (cudaSuccess != err) {	// Check for error values
-		printf("(Cuda error %s): %s\n", "Allocating rowsDouble_gpu", cudaGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
-
-	// TODO: Allocate a vector of double precision values of size columns
-	double *columnsDouble_gpu;
-	err = cudaMalloc(&columnsDouble_gpu, sizeof(double) * columns);
-	if (cudaSuccess != err) {	// Check for error values
-		printf("(Cuda error %s): %s\n", "Allocating columnsDouble_gpu", cudaGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
-
-	// TODO: Allocate one double precision value for the reduced rowsDouble_gpu vector
-	double *totalRowsDouble_gpu;
-	err = cudaMalloc(&totalRowsDouble_gpu, sizeof(double));
-	if (cudaSuccess != err) {	// Check for error values
-		printf("(Cuda error %s): %s\n", "Allocating totalRowsDouble_gpu", cudaGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
-
-	// TODO: Allocate one double precision value for the reduced columnsDouble_gpu vector
-	double *totalColumnsDouble_gpu;
-	err = cudaMalloc(&totalColumnsDouble_gpu, sizeof(double));
-	if (cudaSuccess != err) {	// Check for error values
-		printf("(Cuda error %s): %s\n", "Allocating totalColumnsDouble_gpu", cudaGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
-
-	// Cuda Timing
-	cudaEventRecord(allocateDoubleGpuEnd, 0);
-	cudaEventSynchronize(allocateDoubleGpuStart);  // This is optional, we shouldn't need it
-	cudaEventSynchronize(allocateDoubleGpuEnd); // This isn't - we need to wait for the event to finish
-	cudaEventElapsedTime(&allocateDoubleGpuElapsedTime, allocateDoubleGpuStart, allocateDoubleGpuEnd);
-	allocateDoubleGpuTime=(float)(allocateDoubleGpuElapsedTime)*0.001;
-	cudaLastErrorCheck("allocateDouble_rows_kernel");
-
-	if (verbose) cout << "allocateDoubleGpuTime: " << allocateDoubleGpuTime << endl;
-
-	// ************************ Single precision transfer to device ************************
-	// Cuda Timing
-	cudaEvent_t transferFloatGpuStart, transferFloatGpuEnd;
-	float transferFloatGpuElapsedTime,transferFloatGpuTime;
-	cudaEventCreate(&transferFloatGpuStart);
-	cudaEventCreate(&transferFloatGpuEnd);
-	cudaEventRecord(transferFloatGpuStart, 0); // We use 0 here because it is the "default" stream
-
-	// TODO: Copy the single precision matrix (matrixFloat1d) into the global memory of the GPU (matrixFloat_gpu)
-	err = cudaMemcpy(matrixFloat_gpu, matrixFloat1d.data(), sizeof(float) * (rows * columns), cudaMemcpyHostToDevice);
-	if (cudaSuccess != err) {	// Check for error values
-		printf("(Cuda error %s): %s\n", "Error copying matrixFloat1d to matrixFloat_gpu", cudaGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
-
-	// Cuda Timing
-	cudaEventRecord(transferFloatGpuEnd, 0);
-	cudaEventSynchronize(transferFloatGpuStart);  // This is optional, we shouldn't need it
-	cudaEventSynchronize(transferFloatGpuEnd); // This isn't - we need to wait for the event to finish
-	cudaEventElapsedTime(&transferFloatGpuElapsedTime, transferFloatGpuStart, transferFloatGpuEnd);
-	transferFloatGpuTime=(float)(transferFloatGpuElapsedTime)*0.001;
-	if (verbose) cout << "transferFloatGpuTime: " << transferFloatGpuTime << endl;
-
-	// ************************ Double transfer to device ************************
-	// Cuda Timing
-	cudaEvent_t transferDoubleGpuStart, transferDoubleGpuEnd;
-	float transferDoubleGpuElapsedTime,transferDoubleGpuTime;
-	cudaEventCreate(&transferDoubleGpuStart);
-	cudaEventCreate(&transferDoubleGpuEnd);
-	cudaEventRecord(transferDoubleGpuStart, 0); // We use 0 here because it is the "default" stream
-
-	// TODO: Copy the double precision matrix (matrixDouble1d) into the global memory of the GPU (matrixDouble_gpu)
-	err = cudaMemcpy(matrixDouble_gpu, matrixDouble1d.data(), sizeof(double) * (rows * columns), cudaMemcpyHostToDevice);
-	if (cudaSuccess != err) {	// Check for error values
-		printf("(Cuda error %s): %s\n", "Error copying matrixDouble1d to matrixDouble_gpu", cudaGetErrorString(err));
-		exit(EXIT_FAILURE);
-	}
-
-	// Cuda Timing
-	cudaEventRecord(transferDoubleGpuEnd, 0);
-	cudaEventSynchronize(transferDoubleGpuStart);  // This is optional, we shouldn't need it
-	cudaEventSynchronize(transferDoubleGpuEnd); // This isn't - we need to wait for the event to finish
-	cudaEventElapsedTime(&transferDoubleGpuElapsedTime, transferDoubleGpuStart, transferDoubleGpuEnd);
-	transferDoubleGpuTime=(double)(transferDoubleGpuElapsedTime)*0.001;
-
-	if (verbose) cout << "transferDoubleGpuTime: " << transferDoubleGpuTime << endl;
 
 	// ************************ Compute set up ************************
 	// TODO: Compute the execution configuration (theads and blocks) :
@@ -390,275 +258,143 @@ extern int cudaMatrixAddUp (
 	dim3 dimGridSingleRow((rows / dimBlockSingleRow.x) + (!(rows % dimBlockSingleRow.x) ? 0 : 1));
 	// TODO: Number Of blocks for the single precision column wise operation from the variables blockSizeSinglePrecisionColumn and columns
 	dim3 dimGridSingleCol((columns / dimBlockSingleCol.x) + (!(columns % dimBlockSingleCol.x) ? 0 : 1));
-	// TODO: Number Of blocks for the double precision row wise operation from the variables blockSizeSinglePrecisionRow and rows
-	dim3 dimGridDoubleRow((rows / dimBlockDoubleRow.x) + (!(rows % dimBlockDoubleRow.x) ? 0 : 1));
-	// TODO: Number Of blocks for the double precision column wise operation from the variables blockSizeSinglePrecisionColumn and columns
-	dim3 dimGridDoubleCol((columns / dimBlockDoubleCol.x) + (!(columns % dimBlockDoubleCol.x) ? 0 : 1));
 
 
-	if (verbose) {
-		// TODO: Print the number of threads per block and number of blocks for each one of the four cases
-		printf("Single Precision Row-wise: %d threads/block, %d blocks\n", dimBlockSingleRow.x, dimGridSingleRow.x);
-        printf("Single Precision Col-wise: %d threads/block, %d blocks\n", dimBlockSingleCol.x, dimGridSingleCol.x);
-        printf("Double Precision Row-wise: %d threads/block, %d blocks\n", dimBlockDoubleRow.x, dimGridDoubleRow.x);
-        printf("Double Precision Col-wise: %d threads/block, %d blocks\n", dimBlockDoubleCol.x, dimGridDoubleCol.x);
-	}
+cudaEvent_t totalFloatStart, totalFloatEnd;
+    cudaEventCreate(&totalFloatStart); cudaEventCreate(&totalFloatEnd);
+    cudaEventRecord(totalFloatStart, 0); //Start timer
 
-	// ************************ Single precision compute ************************
-	// ************************ 
-	// Add row wise:
+    int rowsPerStream = rows / numberOfStreams;
 
-	// --- Time the Add Kernel ---
-    cudaEvent_t addRowsFloatGpuStart, addRowsFloatGpuEnd;
-    cudaEventCreate(&addRowsFloatGpuStart);
-    cudaEventCreate(&addRowsFloatGpuEnd);
-    cudaEventRecord(addRowsFloatGpuStart, 0);
+    //Depth first loop
+    for (int i = 0; i < numberOfStreams; ++i) {
+        int rowOffset = i * rowsPerStream;
+        int currentRows = (i == numberOfStreams - 1) ? (rows - rowOffset) : rowsPerStream;
+        int elemOffset = rowOffset * columns;
 
-    // Call the kernel that adds the rows
-    addMatrixRowsSinglePrecision<<<rows, dimBlockSingleRow, dimBlockSingleRow.x * sizeof(float)>>>(matrixFloat_gpu, rowsFloat_gpu, rows, columns);
+        //Async Transfer
+        cudaMemcpyAsync(&matrixFloat_gpu[elemOffset], &matrixFloat1d[elemOffset], currentRows * columns * sizeof(float), cudaMemcpyHostToDevice, streamsFloat[i]);
 
-    cudaEventRecord(addRowsFloatGpuEnd, 0);
-    cudaEventSynchronize(addRowsFloatGpuEnd);
-    
-    float addRowsFloatGpuElapsedTime;
-    cudaEventElapsedTime(&addRowsFloatGpuElapsedTime, addRowsFloatGpuStart, addRowsFloatGpuEnd);
-    timeAddRowsFloatGpu = addRowsFloatGpuElapsedTime * 0.001;
-    if (verbose) cout << "Add Matrix Rows Float Gpu Time: " << timeAddRowsFloatGpu << endl;
+        //Kernel Launch 
+        dim3 dimGridChunk((currentRows + dimBlockSingleRow.x - 1) / dimBlockSingleRow.x);
+        addMatrixRowsSinglePrecision<<<dimGridChunk, dimBlockSingleRow, dimBlockSingleRow.x * sizeof(float), streamsFloat[i]>>>(
+            &matrixFloat_gpu[elemOffset], &rowsFloat_gpu[rowOffset], currentRows, columns);
+    }
 
+    /* 
+    //Breadth first loop
+    for (int i = 0; i < numberOfStreams; ++i) {
+        int rowOffset = i * rowsPerStream;
+        int currentRows = (i == numberOfStreams - 1) ? (rows - rowOffset) : rowsPerStream;
+        int elemOffset = rowOffset * columns;
+        cudaMemcpyAsync(&matrixFloat_gpu[elemOffset], &matrixFloat1d[elemOffset], currentRows * columns * sizeof(float), cudaMemcpyHostToDevice, streamsFloat[i]);
+    }
+    for (int i = 0; i < numberOfStreams; ++i) {
+        int rowOffset = i * rowsPerStream;
+        int currentRows = (i == numberOfStreams - 1) ? (rows - rowOffset) : rowsPerStream;
+        int elemOffset = rowOffset * columns;
+        dim3 dimGridChunk((currentRows + dimBlockSingleRow.x - 1) / dimBlockSingleRow.x);
+        addMatrixRowsSinglePrecision<<<dimGridChunk, dimBlockSingleRow, dimBlockSingleRow.x * sizeof(float), streamsFloat[i]>>>(
+            &matrixFloat_gpu[elemOffset], &rowsFloat_gpu[rowOffset], currentRows, columns);
+    }
+    */
 
-    // --- Time the Reduce Kernel ---
-    cudaEvent_t reduceRowsFloatGpuStart, reduceRowsFloatGpuEnd;
-    cudaEventCreate(&reduceRowsFloatGpuStart);
-    cudaEventCreate(&reduceRowsFloatGpuEnd);
-    cudaEventRecord(reduceRowsFloatGpuStart, 0);
+    //Wait for stream chunks to finish before reducing
+    cudaDeviceSynchronize();
 
-    // Set the target value to 0 before accumulating
+    //Reduce Rows
     cudaMemset(totalRowsFloat_gpu, 0, sizeof(float));
-    // Calculate grid size for the 1D vector reduction
     int reduceGridSize = (rows + dimBlockSingleRow.x - 1) / dimBlockSingleRow.x;
-    
-    // Call the kernel that reduces the vector
     reduceVectorSinglePrecision<<<reduceGridSize, dimBlockSingleRow, dimBlockSingleRow.x * sizeof(float)>>>(rowsFloat_gpu, totalRowsFloat_gpu, rows);
 
-    cudaEventRecord(reduceRowsFloatGpuEnd, 0);
-    cudaEventSynchronize(reduceRowsFloatGpuEnd);
-    
-    float reduceRowsFloatGpuElapsedTime;
-    cudaEventElapsedTime(&reduceRowsFloatGpuElapsedTime, reduceRowsFloatGpuStart, reduceRowsFloatGpuEnd);
-    timeReduceRowsFloatGpu = reduceRowsFloatGpuElapsedTime * 0.001;
-    if (verbose) cout << "Reduce Vector Float Gpu Time: " << timeReduceRowsFloatGpu << endl;
-
-	// ************************ 
-	// Add column wise:
-
-	// --- Time the Add Kernel ---
-    cudaEvent_t addColsFloatGpuStart, addColsFloatGpuEnd;
-    cudaEventCreate(&addColsFloatGpuStart);
-    cudaEventCreate(&addColsFloatGpuEnd);
-    cudaEventRecord(addColsFloatGpuStart, 0);
-
-    // Call the kernel that adds the columns
+    //Column Wise Addition 
     addMatrixColsSinglePrecision<<<dimGridSingleCol, dimBlockSingleCol>>>(matrixFloat_gpu, columnsFloat_gpu, rows, columns);
-
-    cudaEventRecord(addColsFloatGpuEnd, 0);
-    cudaEventSynchronize(addColsFloatGpuEnd);
     
-    float addColsFloatGpuElapsedTime;
-    cudaEventElapsedTime(&addColsFloatGpuElapsedTime, addColsFloatGpuStart, addColsFloatGpuEnd);
-    timeAddColumnsFloatGpu = addColsFloatGpuElapsedTime * 0.001;
-    if (verbose) cout << "Add Matrix Cols Float Gpu Time: " << timeAddColumnsFloatGpu << endl;
-
-
-    // --- Time the Reduce Kernel ---
-    cudaEvent_t reduceColsFloatGpuStart, reduceColsFloatGpuEnd;
-    cudaEventCreate(&reduceColsFloatGpuStart);
-    cudaEventCreate(&reduceColsFloatGpuEnd);
-    cudaEventRecord(reduceColsFloatGpuStart, 0);
-
-    // Set the target value to 0 before accumulating
+    //Reduce Columns
     cudaMemset(totalColumnsFloat_gpu, 0, sizeof(float));
-    // Calculate grid size for the 1D vector reduction (using columns instead of rows)
     int reduceGridSizeCol = (columns + dimBlockSingleCol.x - 1) / dimBlockSingleCol.x;
-    
-    // Call the kernel that reduces the vector
     reduceVectorSinglePrecision<<<reduceGridSizeCol, dimBlockSingleCol, dimBlockSingleCol.x * sizeof(float)>>>(columnsFloat_gpu, totalColumnsFloat_gpu, columns);
 
-    cudaEventRecord(reduceColsFloatGpuEnd, 0);
-    cudaEventSynchronize(reduceColsFloatGpuEnd);
+    //Async Transfers back to Host
+    cudaMemcpyAsync(&totalRowsFloat, totalRowsFloat_gpu, sizeof(float), cudaMemcpyDeviceToHost, 0);
+    cudaMemcpyAsync(&totalColumnsFloat, totalColumnsFloat_gpu, sizeof(float), cudaMemcpyDeviceToHost, 0);
+
+    cudaEventRecord(totalFloatEnd, 0);
+    cudaEventSynchronize(totalFloatEnd);
     
-    float reduceColsFloatGpuElapsedTime;
-    cudaEventElapsedTime(&reduceColsFloatGpuElapsedTime, reduceColsFloatGpuStart, reduceColsFloatGpuEnd);
-    timeReduceColumnsFloatGpu = reduceColsFloatGpuElapsedTime * 0.001;
-    if (verbose) cout << "Reduce Vector Cols Float Gpu Time: " << timeReduceColumnsFloatGpu << endl;
-
-	// ************************ Double compute ************************
-	// ************************ 
-	// Add row wise:
-
-	// Cuda Timing
-	// --- Time the Add Kernel ---
-    cudaEvent_t addRowsDoubleGpuStart, addRowsDoubleGpuEnd;
-    cudaEventCreate(&addRowsDoubleGpuStart);
-    cudaEventCreate(&addRowsDoubleGpuEnd);
-    cudaEventRecord(addRowsDoubleGpuStart, 0);
-
-    // Call the kernel that adds the rows
-    addMatrixRowsDoublePrecision<<<rows, dimBlockDoubleRow, dimBlockDoubleRow.x * sizeof(double)>>>(matrixDouble_gpu, rowsDouble_gpu, rows, columns);
-
-    cudaEventRecord(addRowsDoubleGpuEnd, 0);
-    cudaEventSynchronize(addRowsDoubleGpuEnd);
-    
-    float addRowsDoubleGpuElapsedTime;
-    cudaEventElapsedTime(&addRowsDoubleGpuElapsedTime, addRowsDoubleGpuStart, addRowsDoubleGpuEnd);
-    timeAddRowsDoubleGpu = addRowsDoubleGpuElapsedTime * 0.001;
-    if (verbose) cout << "Add Matrix Rows Double Gpu Time: " << timeAddRowsDoubleGpu << endl;
+    float totalFloatPipelineTime;
+    cudaEventElapsedTime(&totalFloatPipelineTime, totalFloatStart, totalFloatEnd);
+    if (verbose) cout << "OVERALL Single Precision Pipeline Time: " << totalFloatPipelineTime * 0.001 << " seconds (Using " << numberOfStreams << " streams)" << endl;
 
 
-    // --- Time the Reduce Kernel ---
-    cudaEvent_t reduceRowsDoubleGpuStart, reduceRowsDoubleGpuEnd;
-    cudaEventCreate(&reduceRowsDoubleGpuStart);
-    cudaEventCreate(&reduceRowsDoubleGpuEnd);
-    cudaEventRecord(reduceRowsDoubleGpuStart, 0);
 
-    // Set the target value to 0 before accumulating
+    //Double precision add
+    cudaEvent_t totalDoubleStart, totalDoubleEnd;
+    cudaEventCreate(&totalDoubleStart); cudaEventCreate(&totalDoubleEnd);
+    cudaEventRecord(totalDoubleStart, 0);
+
+    for (int i = 0; i < numberOfStreams; ++i) {
+        int rowOffset = i * rowsPerStream;
+        int currentRows = (i == numberOfStreams - 1) ? (rows - rowOffset) : rowsPerStream;
+        int elemOffset = rowOffset * columns;
+
+        cudaMemcpyAsync(&matrixDouble_gpu[elemOffset], &matrixDouble1d[elemOffset], currentRows * columns * sizeof(double), cudaMemcpyHostToDevice, streamsDouble[i]);
+
+        dim3 dimGridChunk((currentRows + dimBlockDoubleRow.x - 1) / dimBlockDoubleRow.x);
+        addMatrixRowsDoublePrecision<<<dimGridChunk, dimBlockDoubleRow, dimBlockDoubleRow.x * sizeof(double), streamsDouble[i]>>>(
+            &matrixDouble_gpu[elemOffset], &rowsDouble_gpu[rowOffset], currentRows, columns);
+    }
+
+    cudaDeviceSynchronize();
+
     cudaMemset(totalRowsDouble_gpu, 0, sizeof(double));
-    // Calculate grid size for the 1D vector reduction
     int reduceGridSizeDoubleRow = (rows + dimBlockDoubleRow.x - 1) / dimBlockDoubleRow.x;
-    
-    // Call the kernel that reduces the vector
     reduceVectorDoublePrecision<<<reduceGridSizeDoubleRow, dimBlockDoubleRow, dimBlockDoubleRow.x * sizeof(double)>>>(rowsDouble_gpu, totalRowsDouble_gpu, rows);
 
-    cudaEventRecord(reduceRowsDoubleGpuEnd, 0);
-    cudaEventSynchronize(reduceRowsDoubleGpuEnd);
-    
-    float reduceRowsDoubleGpuElapsedTime;
-    cudaEventElapsedTime(&reduceRowsDoubleGpuElapsedTime, reduceRowsDoubleGpuStart, reduceRowsDoubleGpuEnd);
-    timeReduceRowsDoubleGpu = reduceRowsDoubleGpuElapsedTime * 0.001;
-    if (verbose) cout << "Reduce Vector Rows Double Gpu Time: " << timeReduceRowsDoubleGpu << endl;
-
-	// ************************ 
-	// Add vertically:
-
-	// --- Time the Add Kernel ---
-    cudaEvent_t addColsDoubleGpuStart, addColsDoubleGpuEnd;
-    cudaEventCreate(&addColsDoubleGpuStart);
-    cudaEventCreate(&addColsDoubleGpuEnd);
-    cudaEventRecord(addColsDoubleGpuStart, 0);
-
-    // Call the kernel that adds the columns
     addMatrixColsDoublePrecision<<<dimGridDoubleCol, dimBlockDoubleCol>>>(matrixDouble_gpu, columnsDouble_gpu, rows, columns);
 
-    cudaEventRecord(addColsDoubleGpuEnd, 0);
-    cudaEventSynchronize(addColsDoubleGpuEnd);
-    
-    float addColsDoubleGpuElapsedTime;
-    cudaEventElapsedTime(&addColsDoubleGpuElapsedTime, addColsDoubleGpuStart, addColsDoubleGpuEnd);
-    timeAddColumnsDoubleGpu = addColsDoubleGpuElapsedTime * 0.001;
-    if (verbose) cout << "Add Matrix Cols Double Gpu Time: " << timeAddColumnsDoubleGpu << endl;
-
-
-    // --- Time the Reduce Kernel ---
-    cudaEvent_t reduceColsDoubleGpuStart, reduceColsDoubleGpuEnd;
-    cudaEventCreate(&reduceColsDoubleGpuStart);
-    cudaEventCreate(&reduceColsDoubleGpuEnd);
-    cudaEventRecord(reduceColsDoubleGpuStart, 0);
-
-    // Set the target value to 0 before accumulating
     cudaMemset(totalColumnsDouble_gpu, 0, sizeof(double));
-    // Calculate grid size for the 1D vector reduction
     int reduceGridSizeDoubleCol = (columns + dimBlockDoubleCol.x - 1) / dimBlockDoubleCol.x;
-    
-    // Call the kernel that reduces the vector
     reduceVectorDoublePrecision<<<reduceGridSizeDoubleCol, dimBlockDoubleCol, dimBlockDoubleCol.x * sizeof(double)>>>(columnsDouble_gpu, totalColumnsDouble_gpu, columns);
 
-    cudaEventRecord(reduceColsDoubleGpuEnd, 0);
-    cudaEventSynchronize(reduceColsDoubleGpuEnd);
+    cudaMemcpyAsync(&totalRowsDouble, totalRowsDouble_gpu, sizeof(double), cudaMemcpyDeviceToHost, 0);
+    cudaMemcpyAsync(&totalColumnsDouble, totalColumnsDouble_gpu, sizeof(double), cudaMemcpyDeviceToHost, 0);
+
+    cudaEventRecord(totalDoubleEnd, 0);
+    cudaEventSynchronize(totalDoubleEnd);
     
-    float reduceColsDoubleGpuElapsedTime;
-    cudaEventElapsedTime(&reduceColsDoubleGpuElapsedTime, reduceColsDoubleGpuStart, reduceColsDoubleGpuEnd);
-    timeReduceColumnsDoubleGpu = reduceColsDoubleGpuElapsedTime * 0.001;
-    if (verbose) cout << "Reduce Vector Cols Double Gpu Time: " << timeReduceColumnsDoubleGpu << endl;
+    float totalDoublePipelineTime;
+    cudaEventElapsedTime(&totalDoublePipelineTime, totalDoubleStart, totalDoubleEnd);
+    if (verbose) cout << "OVERALL Double Precision Pipeline Time: " << totalDoublePipelineTime * 0.001 << " seconds (Using " << numberOfStreams << " streams)" << endl;
 
-	// ************************ Single precision transfer back to host ************************
 
-	// Cuda Timing
-	cudaEvent_t transferBackFloatGpuStart, transferBackFloatGpuEnd;
-	float transferBackFloatGpuElapsedTime,transferBackFloatGpuTime;
-	cudaEventCreate(&transferBackFloatGpuStart);
-	cudaEventCreate(&transferBackFloatGpuEnd);
-	cudaEventRecord(transferBackFloatGpuStart, 0); // We use 0 here because it is the "default" stream
+    
+    //Unpin Host Memory
+    cudaHostUnregister(matrixFloat1d.data());
+    cudaHostUnregister(matrixDouble1d.data());
 
-	// TODO: Copy totalRowsFloat_gpu into totalRowsFloat
-	err = cudaMemcpy(&totalRowsFloat, totalRowsFloat_gpu, sizeof(float), cudaMemcpyDeviceToHost);
-    if (cudaSuccess != err) {
-        printf("(Cuda error %s): %s\n", "Error copying totalRowsFloat_gpu to host", cudaGetErrorString(err));
-        exit(EXIT_FAILURE);
+    //Destroy Streams
+    for (int i = 0; i < numberOfStreams; ++i) {
+        cudaStreamDestroy(streamsFloat[i]);
+        cudaStreamDestroy(streamsDouble[i]);
     }
-	// TODO: Copy totalColumnsFloat_gpu into totalColumnsFloat
-	err = cudaMemcpy(&totalColumnsFloat, totalColumnsFloat_gpu, sizeof(float), cudaMemcpyDeviceToHost);
-    if (cudaSuccess != err) {
-        printf("(Cuda error %s): %s\n", "Error copying totalColumnsFloat_gpu to host", cudaGetErrorString(err));
-        exit(EXIT_FAILURE);
-    }
+    delete[] streamsFloat;
+    delete[] streamsDouble;
 
+    //Free Device Memory
+    cudaFree(matrixFloat_gpu);
+    cudaFree(rowsFloat_gpu);
+    cudaFree(columnsFloat_gpu);
+    cudaFree(totalRowsFloat_gpu);
+    cudaFree(totalColumnsFloat_gpu);
+    cudaFree(matrixDouble_gpu);
+    cudaFree(rowsDouble_gpu);
+    cudaFree(columnsDouble_gpu);
+    cudaFree(totalRowsDouble_gpu);
+    cudaFree(totalColumnsDouble_gpu);
 
-	// Cuda Timing
-	cudaEventRecord(transferBackFloatGpuEnd, 0);
-	cudaEventSynchronize(transferBackFloatGpuStart);  // This is optional, we shouldn't need it
-	cudaEventSynchronize(transferBackFloatGpuEnd); // This isn't - we need to wait for the event to finish
-	cudaEventElapsedTime(&transferBackFloatGpuElapsedTime, transferBackFloatGpuStart, transferBackFloatGpuEnd);
-	transferBackFloatGpuTime=(float)(transferBackFloatGpuElapsedTime)*0.001;
-	cudaLastErrorCheck("transferBackFloat_rows_kernel");
-	if (verbose) cout << "transferBackFloatGpuTime: " << transferBackFloatGpuTime << endl;
-
-	// ************************ Double precision transfer back to host ************************
-
-	// Cuda Timing
-	cudaEvent_t transferBackDoubleGpuStart, transferBackDoubleGpuEnd;
-	float transferBackDoubleGpuElapsedTime,transferBackDoubleGpuTime;
-	cudaEventCreate(&transferBackDoubleGpuStart);
-	cudaEventCreate(&transferBackDoubleGpuEnd);
-	cudaEventRecord(transferBackDoubleGpuStart, 0); // We use 0 here because it is the "default" stream
-
-	// TODO: Copy totalRowsDouble_gpu into totalRowsDouble
-	err = cudaMemcpy(&totalRowsDouble, totalRowsDouble_gpu, sizeof(double), cudaMemcpyDeviceToHost);
-    if (cudaSuccess != err) {
-        printf("(Cuda error %s): %s\n", "Error copying totalRowsDouble_gpu to host", cudaGetErrorString(err));
-        exit(EXIT_FAILURE);
-    }
-	// TODO: Copy totalColumnsDouble_gpu into totalColumnsDouble
-	err = cudaMemcpy(&totalColumnsDouble, totalColumnsDouble_gpu, sizeof(double), cudaMemcpyDeviceToHost);
-    if (cudaSuccess != err) {
-        printf("(Cuda error %s): %s\n", "Error copying totalColumnsDouble_gpu to host", cudaGetErrorString(err));
-        exit(EXIT_FAILURE);
-    }
-
-	// Cuda Timing
-	cudaEventRecord(transferBackDoubleGpuEnd, 0);
-	cudaEventSynchronize(transferBackDoubleGpuStart);  // This is optional, we shouldn't need it
-	cudaEventSynchronize(transferBackDoubleGpuEnd); // This isn't - we need to wait for the event to finish
-	cudaEventElapsedTime(&transferBackDoubleGpuElapsedTime, transferBackDoubleGpuStart, transferBackDoubleGpuEnd);
-	transferBackDoubleGpuTime=(double)(transferBackDoubleGpuElapsedTime)*0.001;
-	cudaLastErrorCheck("transferBackDouble_rows_kernel");
-	if (verbose) cout << "transferBackDoubleGpuTime: " << transferBackDoubleGpuTime << endl;
-
-	// Free the memory
-	// TODO: Free matrixFloat_gpu,rowsFloat_gpu, columnsFloat_gpu, totalRowsFloat_gpu and totalColumnsFloat_gpu
-	// TODO: Free matrixDouble_gpu,rowsDouble_gpu, columnsDouble_gpu, totalRowsDouble_gpu and totalColumnsDouble_gpu
-	cudaFree(matrixFloat_gpu);
-	cudaFree(rowsFloat_gpu);
-	cudaFree(columnsFloat_gpu);
-	cudaFree(totalRowsFloat_gpu);
-	cudaFree(totalColumnsFloat_gpu);
-	cudaFree(matrixDouble_gpu);
-	cudaFree(rowsDouble_gpu);
-	cudaFree(columnsDouble_gpu);
-	cudaFree(totalRowsDouble_gpu);
-	cudaFree(totalColumnsDouble_gpu);
-
-
-	cudaDeviceReset();
-	return 0;
+    cudaDeviceReset();
+    return 0;
 }
 
 

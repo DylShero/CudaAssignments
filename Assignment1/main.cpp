@@ -18,12 +18,12 @@
 using namespace std;
 
 int blockSizeSinglePrecisionRow, blockSizeSinglePrecisionColumn, blockSizeDoublePrecisionRow, blockSizeDoublePrecisionColumn;
+int numberOfStreams;
 long int seed;
 unsigned int columns,rows,printPrecision;
 bool verbose,timing,cpu,gpu;
 
-extern inline int cudaMatrixAddUp (std::vector< float > &,std::vector< double > &, int,int,float&,float&,double &,double &,double &,double &,double &,double &,double &,double &,double &,double &, int &,int &,int &,int &,bool,unsigned int);
-//extern inline int add_vectors(void);
+extern inline int cudaMatrixAddUp (std::vector< float > &,std::vector< double > &, int,int,float&,float&,double &,double &,double &,double &,double &,double &,double &,double &,double &,double &, int &,int &,int &,int &,bool,unsigned int, int);
 extern inline int		chooseCudaCard			(bool verbose);
 
 void	generateRandomMatrix	(std::vector< float > &,std::vector< float* > &, unsigned int , unsigned int);
@@ -131,6 +131,7 @@ int main(int argc, char *argv[]) {
 	cpu=true;
 	gpu=true;
 	seed=1234567;
+	numberOfStreams = 4;
 
 	// ************************ Compute set up ************************
 	// Compute the execution configuration (number of blocks for each row and column operation)
@@ -256,7 +257,7 @@ int main(int argc, char *argv[]) {
 							totalAddedRowsFloatGpu,totalAddedColumnsFloatGpu,totalAddedRowsDoubleGpu,totalAddedColumnsDoubleGpu,
 							timeAddRowsFloatGpu,timeAddColumnsFloatGpu,timeReduceRowsFloatGpu, timeReduceColumnsFloatGpu,timeAddRowsDoubleGpu,timeAddColumnsDoubleGpu,timeReduceRowsDoubleGpu, timeReduceColumnsDoubleGpu,
 							blockSizeSinglePrecisionRow,blockSizeSinglePrecisionColumn,blockSizeDoublePrecisionRow,blockSizeDoublePrecisionColumn,
-							verbose,printPrecision);
+							verbose,printPrecision, numberOfStreams);
 	}
 
 	if (cpu&&gpu) {
@@ -374,6 +375,9 @@ int parseArguments (int argc, char *argv[]) {
 				break;
 			case 't':
 				timing = true; break;
+			case 's': //Case for streams
+            	numberOfStreams = atoi(optarg); 
+            	break;
 			case 'v':
 				verbose = true; break;
 			case 'x':
