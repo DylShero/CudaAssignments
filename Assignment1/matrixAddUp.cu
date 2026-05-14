@@ -254,10 +254,8 @@ extern int cudaMatrixAddUp (
 	// TODO: Number Of Threads per block for the double precision column wise operation from the variable blockSizeDoublePrecisionColumn
 	dim3 dimBlockDoubleCol(blockSizeDoublePrecisionColumn);
 
-	// TODO: Number Of blocks for the single precision row wise operation from the variables blockSizeSinglePrecisionRow and rows
-	dim3 dimGridSingleRow((rows / dimBlockSingleRow.x) + (!(rows % dimBlockSingleRow.x) ? 0 : 1));
-	// TODO: Number Of blocks for the single precision column wise operation from the variables blockSizeSinglePrecisionColumn and columns
-	dim3 dimGridSingleCol((columns / dimBlockSingleCol.x) + (!(columns % dimBlockSingleCol.x) ? 0 : 1));
+	dim3 dimGridSingleCol((columns + dimBlockSingleCol.x - 1) / dimBlockSingleCol.x);
+    dim3 dimGridDoubleCol((columns + dimBlockDoubleCol.x - 1) / dimBlockDoubleCol.x);
 
 
 cudaEvent_t totalFloatStart, totalFloatEnd;
