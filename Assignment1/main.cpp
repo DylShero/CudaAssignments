@@ -354,7 +354,7 @@ int main(int argc, char *argv[]) {
 int parseArguments (int argc, char *argv[]) {
 	int c;
 
-	while ((c = getopt (argc, argv, "hcgn:m:p:rtx:X:y:Y:v")) != -1) {
+	while ((c = getopt (argc, argv, "hcgn:m:p:rtx:X:y:Y:vs:")) != -1) {
 		switch(c) {
 			case 'c':
 				cpu=false; break;	 //Skip the CPU test
