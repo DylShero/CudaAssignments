@@ -263,7 +263,7 @@ cudaEvent_t totalFloatStart, totalFloatEnd;
     cudaEventRecord(totalFloatStart, 0); //Start timer
 
     int rowsPerStream = rows / numberOfStreams;
-
+    /*
     //Depth first loop
     for (int i = 0; i < numberOfStreams; ++i) {
         int rowOffset = i * rowsPerStream;
@@ -278,8 +278,9 @@ cudaEvent_t totalFloatStart, totalFloatEnd;
         addMatrixRowsSinglePrecision<<<dimGridChunk, dimBlockSingleRow, dimBlockSingleRow.x * sizeof(float), streamsFloat[i]>>>(
             &matrixFloat_gpu[elemOffset], &rowsFloat_gpu[rowOffset], currentRows, columns);
     }
+            */
 
-    /* 
+    
     //Breadth first loop
     for (int i = 0; i < numberOfStreams; ++i) {
         int rowOffset = i * rowsPerStream;
@@ -295,7 +296,7 @@ cudaEvent_t totalFloatStart, totalFloatEnd;
         addMatrixRowsSinglePrecision<<<dimGridChunk, dimBlockSingleRow, dimBlockSingleRow.x * sizeof(float), streamsFloat[i]>>>(
             &matrixFloat_gpu[elemOffset], &rowsFloat_gpu[rowOffset], currentRows, columns);
     }
-    */
+    
 
     //Wait for stream chunks to finish before reducing
     cudaDeviceSynchronize();
